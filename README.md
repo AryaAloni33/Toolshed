@@ -76,16 +76,21 @@ Toolshed is a premium, focused workspace featuring a collection of essential too
 
 ## 🌐 Deployment
 
-### Vercel
-This project is configured for seamless deployment on Vercel:
-1. Connect your repository to Vercel.
-2. Ensure the **Build Command** is `bun run build`.
-3. Set the **Output Directory** to `.output`.
+### Cloudflare Pages (Recommended)
+This project is pre-configured for Cloudflare Pages:
+1. Connect your repository to the [Cloudflare Dashboard](https://dash.cloudflare.com/).
+2. Select **Workers & Pages** > **Create** > **Pages** > **Connect to Git**.
+3. Use these settings:
+   - **Build Command**: `bun run build`
+   - **Build Output Directory**: `.output` (or `dist` if using static build)
 4. Add your `VITE_GROQ_API_KEY` in the environment variables.
+5. In **Settings** > **Functions**, ensure the compatibility flag `nodejs_compat` is active.
 
-### Cloudflare
-The project also supports Cloudflare Pages via the included `wrangler.jsonc` configuration.
-
+### Vercel (Alternative)
+If you prefer Vercel:
+1. Ensure the **Build Command** is `bun run build`.
+2. Set the **Output Directory** to `.output`.
+3. The `vercel.json` in the root will handle routing.
 ## 🛡️ Privacy
 All tools (except AI features) run entirely in your browser. No data is sent to a server. For AI tools, data is processed via Groq's high-performance inference engine and is subject to their privacy policy.
 
