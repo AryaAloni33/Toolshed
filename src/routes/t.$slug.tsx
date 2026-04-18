@@ -16,8 +16,14 @@ export const Route = createFileRoute("/t/$slug")({
     meta: [
       { title: `${loaderData?.tool.name ?? "Tool"} — Toolshed` },
       { name: "description", content: loaderData?.tool.description ?? "" },
-      { property: "og:title", content: `${loaderData?.tool.name ?? "Tool"} — Toolshed` },
-      { property: "og:description", content: loaderData?.tool.description ?? "" },
+      {
+        property: "og:title",
+        content: `${loaderData?.tool.name ?? "Tool"} — Toolshed`,
+      },
+      {
+        property: "og:description",
+        content: loaderData?.tool.description ?? "",
+      },
     ],
   }),
   component: ToolPage,
@@ -25,7 +31,9 @@ export const Route = createFileRoute("/t/$slug")({
     <AppShell>
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
         <h1 className="font-display text-3xl font-semibold">Tool not found</h1>
-        <Link to="/" className="mt-6 inline-block text-accent underline">Back to overview</Link>
+        <Link to="/" className="mt-6 inline-block text-accent underline">
+          Back to overview
+        </Link>
       </div>
     </AppShell>
   ),
@@ -44,11 +52,17 @@ function ToolPage() {
     <AppShell>
       <div className="mx-auto max-w-4xl px-4 py-8 md:px-8 md:py-12">
         <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">Overview</Link>
+          <Link to="/" className="hover:text-foreground">
+            Overview
+          </Link>
           <ChevronRight className="h-3 w-3" />
           {cat && (
             <>
-              <Link to="/c/$category" params={{ category: cat.id }} className="hover:text-foreground">
+              <Link
+                to="/c/$category"
+                params={{ category: cat.id }}
+                className="hover:text-foreground"
+              >
                 {cat.label}
               </Link>
               <ChevronRight className="h-3 w-3" />
@@ -73,11 +87,17 @@ function ToolPage() {
           <ToolRenderer slug={tool.slug} />
         ) : (
           <div className="rounded-lg border border-dashed border-border bg-card p-10 text-center">
-            <Construction className="mx-auto h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
-            <h2 className="mt-4 font-display text-xl font-semibold">In the workshop</h2>
+            <Construction
+              className="mx-auto h-8 w-8 text-muted-foreground"
+              strokeWidth={1.5}
+            />
+            <h2 className="mt-4 font-display text-xl font-semibold">
+              In the workshop
+            </h2>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-              This tool is sketched out but not built yet. The interface, the keybindings,
-              the file flow — all coming. In the meantime, try one of the live tools.
+              This tool is sketched out but not built yet. The interface, the
+              keybindings, the file flow — all coming. In the meantime, try one
+              of the live tools.
             </p>
             <Link
               to="/"

@@ -23,7 +23,10 @@ export function Todo() {
   const add = () => {
     const t = input.trim();
     if (!t) return;
-    setItems((prev) => [{ id: crypto.randomUUID(), text: t, done: false }, ...prev]);
+    setItems((prev) => [
+      { id: crypto.randomUUID(), text: t, done: false },
+      ...prev,
+    ]);
     setInput("");
   };
 
@@ -64,7 +67,10 @@ export function Todo() {
         <>
           <ul className="divide-y divide-border">
             {items.map((item) => (
-              <li key={item.id} className="group flex items-center gap-3 py-2.5">
+              <li
+                key={item.id}
+                className="group flex items-center gap-3 py-2.5"
+              >
                 <button
                   onClick={() => toggle(item.id)}
                   className={`grid h-5 w-5 shrink-0 place-items-center rounded border transition-colors ${

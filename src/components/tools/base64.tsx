@@ -25,7 +25,9 @@ export function Base64Tool() {
             key={m}
             onClick={() => setMode(m)}
             className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-              mode === m ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+              mode === m
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {m === "encode" ? "Encode" : "Decode"}

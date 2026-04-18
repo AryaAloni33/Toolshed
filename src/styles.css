@@ -125,19 +125,19 @@
   --ink: oklch(0.22 0.012 60);
 
   /* Category tints — light mode (warm, editorial) */
-  --tint-doc: oklch(0.55 0.16 35);       /* terracotta */
+  --tint-doc: oklch(0.55 0.16 35); /* terracotta */
   --tint-doc-soft: oklch(0.95 0.04 40);
-  --tint-img: oklch(0.5 0.11 165);       /* deep teal */
+  --tint-img: oklch(0.5 0.11 165); /* deep teal */
   --tint-img-soft: oklch(0.94 0.04 170);
-  --tint-text: oklch(0.5 0.13 280);      /* indigo */
+  --tint-text: oklch(0.5 0.13 280); /* indigo */
   --tint-text-soft: oklch(0.94 0.035 280);
-  --tint-file: oklch(0.55 0.13 240);     /* steel blue */
+  --tint-file: oklch(0.55 0.13 240); /* steel blue */
   --tint-file-soft: oklch(0.94 0.04 240);
-  --tint-ai: oklch(0.58 0.18 320);       /* magenta */
+  --tint-ai: oklch(0.58 0.18 320); /* magenta */
   --tint-ai-soft: oklch(0.94 0.04 320);
-  --tint-dev: oklch(0.55 0.13 145);      /* moss green */
+  --tint-dev: oklch(0.55 0.13 145); /* moss green */
   --tint-dev-soft: oklch(0.94 0.05 145);
-  --tint-prod: oklch(0.6 0.16 75);       /* amber */
+  --tint-prod: oklch(0.6 0.16 75); /* amber */
   --tint-prod-soft: oklch(0.94 0.06 80);
 }
 
@@ -221,7 +221,9 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-serif);
     letter-spacing: -0.015em;
   }
@@ -233,7 +235,15 @@
 
 @utility grid-paper {
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--color-border) 60%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--color-border) 60%, transparent) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-border) 60%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-border) 60%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 32px 32px;
 }

@@ -37,7 +37,9 @@ export function ToolCard({ tool }: { tool: Tool }) {
         )}
       </div>
       <div>
-        <h3 className="font-display text-lg font-semibold leading-tight">{tool.name}</h3>
+        <h3 className="font-display text-lg font-semibold leading-tight">
+          {tool.name}
+        </h3>
         <p className="mt-1.5 text-sm leading-snug text-muted-foreground">
           {tool.description}
         </p>

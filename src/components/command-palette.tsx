@@ -49,7 +49,10 @@ export function CommandPalette({
         className="w-full max-w-xl overflow-hidden rounded-xl border border-border bg-popover shadow-2xl shadow-foreground/10"
       >
         <div className="flex items-center gap-2 border-b border-border px-4">
-          <Search className="h-4 w-4 text-muted-foreground" strokeWidth={1.75} />
+          <Search
+            className="h-4 w-4 text-muted-foreground"
+            strokeWidth={1.75}
+          />
           <input
             autoFocus
             value={query}

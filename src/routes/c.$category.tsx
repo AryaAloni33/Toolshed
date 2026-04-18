@@ -16,7 +16,10 @@ export const Route = createFileRoute("/c/$category")({
         name: "description",
         content: `${loaderData?.category.label} tools on Toolshed: ${loaderData?.category.blurb}.`,
       },
-      { property: "og:title", content: `${loaderData?.category.label ?? "Tools"} — Toolshed` },
+      {
+        property: "og:title",
+        content: `${loaderData?.category.label ?? "Tools"} — Toolshed`,
+      },
       {
         property: "og:description",
         content: `${loaderData?.category.label} tools on Toolshed: ${loaderData?.category.blurb}.`,
@@ -27,9 +30,13 @@ export const Route = createFileRoute("/c/$category")({
   notFoundComponent: () => (
     <AppShell>
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
-        <h1 className="font-display text-3xl font-semibold">Category not found</h1>
+        <h1 className="font-display text-3xl font-semibold">
+          Category not found
+        </h1>
         <p className="mt-2 text-muted-foreground">That shelf is empty.</p>
-        <Link to="/" className="mt-6 inline-block text-accent underline">Back to overview</Link>
+        <Link to="/" className="mt-6 inline-block text-accent underline">
+          Back to overview
+        </Link>
       </div>
     </AppShell>
   ),
@@ -52,11 +59,15 @@ function CategoryPage() {
             </h1>
             <p className="mt-1 text-muted-foreground">{category.blurb}</p>
           </div>
-          <span className="font-mono text-xs text-muted-foreground">{list.length} tools</span>
+          <span className="font-mono text-xs text-muted-foreground">
+            {list.length} tools
+          </span>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((t) => <ToolCard key={t.slug} tool={t} />)}
+          {list.map((t) => (
+            <ToolCard key={t.slug} tool={t} />
+          ))}
         </div>
       </div>
     </AppShell>

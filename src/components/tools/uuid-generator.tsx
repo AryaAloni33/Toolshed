@@ -15,7 +15,9 @@ function uuidv4() {
 
 export function UuidGenerator() {
   const [count, setCount] = useState(8);
-  const [ids, setIds] = useState<string[]>(() => Array.from({ length: 8 }, uuidv4));
+  const [ids, setIds] = useState<string[]>(() =>
+    Array.from({ length: 8 }, uuidv4),
+  );
 
   const regenerate = () => setIds(Array.from({ length: count }, uuidv4));
 
@@ -33,7 +35,11 @@ export function UuidGenerator() {
                 min={1}
                 max={100}
                 value={count}
-                onChange={(e) => setCount(Math.max(1, Math.min(100, Number(e.target.value) || 1)))}
+                onChange={(e) =>
+                  setCount(
+                    Math.max(1, Math.min(100, Number(e.target.value) || 1)),
+                  )
+                }
                 className="w-20 rounded-md border border-border bg-background px-3 py-2 text-sm font-mono outline-none focus:border-foreground/30"
               />
               <PrimaryButton onClick={regenerate}>
@@ -48,9 +54,14 @@ export function UuidGenerator() {
       <ToolPanel>
         <ul className="divide-y divide-border">
           {ids.map((id, i) => (
-            <li key={i} className="flex items-center justify-between gap-3 py-2 first:pt-0 last:pb-0">
+            <li
+              key={i}
+              className="flex items-center justify-between gap-3 py-2 first:pt-0 last:pb-0"
+            >
               <code className="font-mono text-sm text-foreground/90">{id}</code>
-              <GhostButton onClick={() => navigator.clipboard.writeText(id)}>Copy</GhostButton>
+              <GhostButton onClick={() => navigator.clipboard.writeText(id)}>
+                Copy
+              </GhostButton>
             </li>
           ))}
         </ul>

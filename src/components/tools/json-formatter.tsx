@@ -2,7 +2,9 @@ import { useMemo, useState } from "react";
 import { CopyButton, DownloadButton, GhostButton, ToolPanel } from "./shared";
 
 export function JsonFormatter() {
-  const [input, setInput] = useState(`{"hello":"world","numbers":[1,2,3],"nested":{"ok":true}}`);
+  const [input, setInput] = useState(
+    `{"hello":"world","numbers":[1,2,3],"nested":{"ok":true}}`,
+  );
   const [indent, setIndent] = useState(2);
 
   const result = useMemo(() => {
@@ -20,7 +22,9 @@ export function JsonFormatter() {
       <ToolPanel>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Indent</span>
+            <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+              Indent
+            </span>
             {[2, 4, 0].map((n) => (
               <button
                 key={n}
@@ -51,20 +55,34 @@ export function JsonFormatter() {
       <ToolPanel>
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className={`h-2 w-2 rounded-full ${result.ok ? "bg-moss" : "bg-destructive"}`} />
+            <span
+              className={`h-2 w-2 rounded-full ${result.ok ? "bg-moss" : "bg-destructive"}`}
+            />
             <span className="text-sm font-medium">
-              {result.ok ? (input.trim() ? "Valid JSON" : "Awaiting input") : "Invalid JSON"}
+              {result.ok
+                ? input.trim()
+                  ? "Valid JSON"
+                  : "Awaiting input"
+                : "Invalid JSON"}
             </span>
           </div>
           {result.ok && result.value && (
             <div className="flex gap-2">
               <CopyButton value={result.value} />
-              <DownloadButton data={result.value} filename="formatted.json" mimeType="application/json" />
+              <DownloadButton
+                data={result.value}
+                filename="formatted.json"
+                mimeType="application/json"
+              />
             </div>
           )}
         </div>
         <pre className="max-h-[420px] overflow-auto rounded-md border border-border bg-background p-3 font-mono text-sm leading-relaxed">
-          {result.ok ? result.value || "—" : <span className="text-destructive">{result.value}</span>}
+          {result.ok ? (
+            result.value || "—"
+          ) : (
+            <span className="text-destructive">{result.value}</span>
+          )}
         </pre>
       </ToolPanel>
     </div>

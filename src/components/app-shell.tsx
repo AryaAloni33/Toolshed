@@ -1,9 +1,22 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Search, Moon, Sun, PanelLeftClose, PanelLeft,
-  LayoutGrid, FileText, Image as ImageIcon, Type, Files, Brain, Code2, ListTodo,
+  Search,
+  Moon,
+  Sun,
+  PanelLeftClose,
+  PanelLeft,
+  LayoutGrid,
+  FileText,
+  Image as ImageIcon,
+  Type,
+  Files,
+  Brain,
+  Code2,
+  ListTodo,
   Github,
+  Database,
+  Activity,
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { CommandPalette } from "./command-palette";
@@ -11,13 +24,15 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutGrid },
-  { to: "/c/documents", label: "Documents", icon: FileText },
-  { to: "/c/images", label: "Images", icon: ImageIcon },
-  { to: "/c/text", label: "Text", icon: Type },
-  { to: "/c/files", label: "Files", icon: Files },
-  { to: "/c/ai", label: "AI", icon: Brain },
-  { to: "/c/developer", label: "Developer", icon: Code2 },
-  { to: "/c/productivity", label: "Productivity", icon: ListTodo },
+  { to: "/c/$category", params: { category: "documents" }, label: "Documents", icon: FileText },
+  { to: "/c/$category", params: { category: "images" }, label: "Images", icon: ImageIcon },
+  { to: "/c/$category", params: { category: "text" }, label: "Text", icon: Type },
+  { to: "/c/$category", params: { category: "files" }, label: "Files", icon: Files },
+  { to: "/c/$category", params: { category: "ai" }, label: "AI", icon: Brain },
+  { to: "/c/$category", params: { category: "developer" }, label: "Developer", icon: Code2 },
+  { to: "/c/$category", params: { category: "productivity" }, label: "Productivity", icon: ListTodo },
+  { to: "/c/$category", params: { category: "data" }, label: "Data", icon: Database },
+  { to: "/c/$category", params: { category: "reference" }, label: "Reference", icon: Activity },
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -49,11 +64,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <nav className="flex-1 space-y-0.5 px-2 py-2">
           {nav.map((item) => {
-            const active = pathname === item.to;
+            const hasParams = "params" in item;
+            const active = pathname === item.to || (hasParams && pathname.includes((item as any).params.category));
             return (
               <Link
-                key={item.to}
+                key={item.label}
                 to={item.to}
+                params={hasParams ? (item as any).params : undefined}
                 className={cn(
                   "group flex items-center gap-3 rounded-md px-2.5 py-2 text-sm transition-colors",
                   active
@@ -73,7 +90,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => setCollapsed((c) => !c)}
             className="flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/60"
           >
-            {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+            {collapsed ? (
+              <PanelLeft className="h-4 w-4" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" />
+            )}
             {!collapsed && <span>Collapse</span>}
           </button>
         </div>
@@ -107,7 +128,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className="grid h-9 w-9 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Toggle theme"
             >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </button>
           </div>
         </header>
@@ -116,7 +141,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <footer className="border-t border-border px-4 py-6 text-xs text-muted-foreground md:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span>© {new Date().getFullYear()} Toolshed — built for focused work.</span>
+            <span>
+              © {new Date().getFullYear()} Toolshed — built for focused work.
+            </span>
             <span className="font-mono">v0.1 · made with care</span>
           </div>
         </footer>

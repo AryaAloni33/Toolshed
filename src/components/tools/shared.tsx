@@ -11,13 +11,21 @@ export function ToolPanel({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-lg border border-border bg-card p-5", className)}>
+    <div
+      className={cn("rounded-lg border border-border bg-card p-5", className)}
+    >
       {children}
     </div>
   );
 }
 
-export function CopyButton({ value, label = "Copy" }: { value: string; label?: string }) {
+export function CopyButton({
+  value,
+  label = "Copy",
+}: {
+  value: string;
+  label?: string;
+}) {
   const [done, setDone] = useState(false);
   return (
     <button
@@ -33,7 +41,11 @@ export function CopyButton({ value, label = "Copy" }: { value: string; label?: s
       }}
       className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-foreground/30"
     >
-      {done ? <Check className="h-3.5 w-3.5 text-moss" /> : <Copy className="h-3.5 w-3.5" />}
+      {done ? (
+        <Check className="h-3.5 w-3.5 text-moss" />
+      ) : (
+        <Copy className="h-3.5 w-3.5" />
+      )}
       {done ? "Copied" : label}
     </button>
   );
@@ -51,7 +63,8 @@ export function DownloadButton({
   return (
     <button
       onClick={() => {
-        const blob = data instanceof Blob ? data : new Blob([data], { type: mimeType });
+        const blob =
+          data instanceof Blob ? data : new Blob([data], { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -88,7 +101,7 @@ export function PrimaryButton({
       disabled={disabled}
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50",
-        className
+        className,
       )}
     >
       {children}
@@ -114,7 +127,7 @@ export function GhostButton({
       disabled={disabled}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:border-foreground/30 disabled:opacity-50 disabled:cursor-not-allowed",
-        className
+        className,
       )}
     >
       {children}
@@ -122,9 +135,9 @@ export function GhostButton({
   );
 }
 
-export function FieldLabel({ children }: { children: React.ReactNode }) {
+export function FieldLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <label className="mb-1.5 block font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+    <label className={cn("mb-1.5 block font-mono text-[11px] uppercase tracking-wider text-muted-foreground", className)}>
       {children}
     </label>
   );

@@ -24,7 +24,9 @@ export function ClipboardHistory() {
   const add = () => {
     const t = input.trim();
     if (!t) return;
-    setItems((p) => [{ id: crypto.randomUUID(), text: t, at: Date.now() }, ...p].slice(0, 50));
+    setItems((p) =>
+      [{ id: crypto.randomUUID(), text: t, at: Date.now() }, ...p].slice(0, 50),
+    );
     setInput("");
   };
 
@@ -81,10 +83,16 @@ export function ClipboardHistory() {
                   onClick={() => copy(snip)}
                   className="grid h-7 w-7 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
-                  {copiedId === snip.id ? <Check className="h-3.5 w-3.5 text-moss" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copiedId === snip.id ? (
+                    <Check className="h-3.5 w-3.5 text-moss" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5" />
+                  )}
                 </button>
                 <button
-                  onClick={() => setItems((p) => p.filter((i) => i.id !== snip.id))}
+                  onClick={() =>
+                    setItems((p) => p.filter((i) => i.id !== snip.id))
+                  }
                   className="grid h-7 w-7 place-items-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-destructive group-hover:opacity-100"
                 >
                   <X className="h-3.5 w-3.5" />

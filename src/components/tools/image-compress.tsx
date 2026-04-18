@@ -34,7 +34,9 @@ export function ImageCompress() {
           const url = URL.createObjectURL(blob);
           setResultUrl(url);
           setResultSize(blob.size);
-          toast.success(`Compressed by ${Math.round((1 - blob.size / origSize) * 100)}%`);
+          toast.success(
+            `Compressed by ${Math.round((1 - blob.size / origSize) * 100)}%`,
+          );
         },
         "image/jpeg",
         quality,
@@ -43,23 +45,42 @@ export function ImageCompress() {
     img.src = src;
   };
 
-  const fmt = (b: number) => (b < 1024 ? `${b}B` : b < 1048576 ? `${(b / 1024).toFixed(1)}KB` : `${(b / 1048576).toFixed(2)}MB`);
+  const fmt = (b: number) =>
+    b < 1024
+      ? `${b}B`
+      : b < 1048576
+        ? `${(b / 1024).toFixed(1)}KB`
+        : `${(b / 1048576).toFixed(2)}MB`;
 
   if (!src) {
-    return <Dropzone accept="image/*" onFile={handleFile} hint="Compresses to JPEG" />;
+    return (
+      <Dropzone
+        accept="image/*"
+        onFile={handleFile}
+        hint="Compresses to JPEG"
+      />
+    );
   }
 
   return (
     <ToolPanel>
       <div className="grid gap-6 md:grid-cols-[1fr,260px]">
         <div className="overflow-hidden rounded-md border border-border bg-background p-3">
-          <img src={resultUrl ?? src} alt="" className="mx-auto max-h-[360px]" />
+          <img
+            src={resultUrl ?? src}
+            alt=""
+            className="mx-auto max-h-[360px]"
+          />
         </div>
         <div className="space-y-4">
           <div>
             <div className="mb-2 flex items-baseline justify-between">
-              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Quality</span>
-              <span className="font-mono text-sm tabular-nums">{Math.round(quality * 100)}</span>
+              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                Quality
+              </span>
+              <span className="font-mono text-sm tabular-nums">
+                {Math.round(quality * 100)}
+              </span>
             </div>
             <input
               type="range"
@@ -104,7 +125,14 @@ export function ImageCompress() {
                 Download
               </a>
             )}
-            <GhostButton onClick={() => { setSrc(null); setResultUrl(null); }}>Choose another</GhostButton>
+            <GhostButton
+              onClick={() => {
+                setSrc(null);
+                setResultUrl(null);
+              }}
+            >
+              Choose another
+            </GhostButton>
           </div>
         </div>
       </div>

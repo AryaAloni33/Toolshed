@@ -11,7 +11,7 @@ const formats = [
 
 export function ImageConvert() {
   const [src, setSrc] = useState<string | null>(null);
-  const [target, setTarget] = useState<typeof formats[number]>(formats[2]);
+  const [target, setTarget] = useState<(typeof formats)[number]>(formats[2]);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
 
   const handleFile = (file: File) => {
@@ -29,11 +29,15 @@ export function ImageConvert() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       ctx.drawImage(img, 0, 0);
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        setResultUrl(URL.createObjectURL(blob));
-        toast.success(`Converted to ${target.label}`);
-      }, target.id, 0.92);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return;
+          setResultUrl(URL.createObjectURL(blob));
+          toast.success(`Converted to ${target.label}`);
+        },
+        target.id,
+        0.92,
+      );
     };
     img.src = src;
   };
@@ -44,7 +48,11 @@ export function ImageConvert() {
     <ToolPanel>
       <div className="grid gap-6 md:grid-cols-[1fr,260px]">
         <div className="overflow-hidden rounded-md border border-border bg-background p-3">
-          <img src={resultUrl ?? src} alt="" className="mx-auto max-h-[360px]" />
+          <img
+            src={resultUrl ?? src}
+            alt=""
+            className="mx-auto max-h-[360px]"
+          />
         </div>
         <div className="space-y-3">
           <div>
@@ -78,7 +86,14 @@ export function ImageConvert() {
                 Download
               </a>
             )}
-            <GhostButton onClick={() => { setSrc(null); setResultUrl(null); }}>Choose another</GhostButton>
+            <GhostButton
+              onClick={() => {
+                setSrc(null);
+                setResultUrl(null);
+              }}
+            >
+              Choose another
+            </GhostButton>
           </div>
         </div>
       </div>

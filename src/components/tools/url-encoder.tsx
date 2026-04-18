@@ -8,7 +8,9 @@ export function UrlEncoder() {
   const output = useMemo(() => {
     if (!input) return "";
     try {
-      return mode === "encode" ? encodeURIComponent(input) : decodeURIComponent(input);
+      return mode === "encode"
+        ? encodeURIComponent(input)
+        : decodeURIComponent(input);
     } catch {
       return "⚠️ Invalid input";
     }
@@ -22,7 +24,9 @@ export function UrlEncoder() {
             key={m}
             onClick={() => setMode(m)}
             className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-              mode === m ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+              mode === m
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {m === "encode" ? "Encode" : "Decode"}
@@ -36,13 +40,19 @@ export function UrlEncoder() {
           onChange={(e) => setInput(e.target.value)}
           spellCheck={false}
           className="block min-h-[120px] w-full resize-y rounded-md border border-border bg-background p-3 font-mono text-sm outline-none focus:border-foreground/30"
-          placeholder={mode === "encode" ? "https://example.com/?q=hello world" : "https%3A%2F%2Fexample.com"}
+          placeholder={
+            mode === "encode"
+              ? "https://example.com/?q=hello world"
+              : "https%3A%2F%2Fexample.com"
+          }
         />
       </ToolPanel>
 
       <ToolPanel>
         <div className="mb-3 flex items-center justify-between">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Result</span>
+          <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            Result
+          </span>
           {output && <CopyButton value={output} />}
         </div>
         <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-sm break-all whitespace-pre-wrap">

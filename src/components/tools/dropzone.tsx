@@ -39,8 +39,12 @@ export function Dropzone({
         <Upload className="h-5 w-5 text-muted-foreground" strokeWidth={1.6} />
       </span>
       <div>
-        <div className="text-sm font-medium">Drop a file here, or click to choose</div>
-        {hint && <div className="mt-0.5 text-xs text-muted-foreground">{hint}</div>}
+        <div className="text-sm font-medium">
+          Drop a file here, or click to choose
+        </div>
+        {hint && (
+          <div className="mt-0.5 text-xs text-muted-foreground">{hint}</div>
+        )}
       </div>
       <input
         ref={ref}

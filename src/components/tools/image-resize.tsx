@@ -5,7 +5,9 @@ import { GhostButton, PrimaryButton, ToolPanel } from "./shared";
 
 export function ImageResize() {
   const [src, setSrc] = useState<string | null>(null);
-  const [origDims, setOrigDims] = useState<{ w: number; h: number } | null>(null);
+  const [origDims, setOrigDims] = useState<{ w: number; h: number } | null>(
+    null,
+  );
   const [w, setW] = useState(800);
   const [h, setH] = useState(600);
   const [lock, setLock] = useState(true);
@@ -51,7 +53,13 @@ export function ImageResize() {
   };
 
   if (!src) {
-    return <Dropzone accept="image/*" onFile={handleFile} hint="JPG, PNG, WebP, GIF" />;
+    return (
+      <Dropzone
+        accept="image/*"
+        onFile={handleFile}
+        hint="JPG, PNG, WebP, GIF"
+      />
+    );
   }
 
   return (
@@ -59,11 +67,17 @@ export function ImageResize() {
       <ToolPanel>
         <div className="grid gap-6 md:grid-cols-[1fr,260px]">
           <div className="overflow-hidden rounded-md border border-border bg-background p-3">
-            <img src={resultUrl ?? src} alt="" className="mx-auto max-h-[360px]" />
+            <img
+              src={resultUrl ?? src}
+              alt=""
+              className="mx-auto max-h-[360px]"
+            />
           </div>
           <div className="space-y-3">
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Width</span>
+              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                Width
+              </span>
               <input
                 type="number"
                 value={w}
@@ -72,7 +86,9 @@ export function ImageResize() {
               />
             </div>
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Height</span>
+              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                Height
+              </span>
               <input
                 type="number"
                 value={h}
@@ -81,7 +97,11 @@ export function ImageResize() {
               />
             </div>
             <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={lock} onChange={(e) => setLock(e.target.checked)} />
+              <input
+                type="checkbox"
+                checked={lock}
+                onChange={(e) => setLock(e.target.checked)}
+              />
               Lock aspect ratio
             </label>
             {origDims && (
@@ -100,7 +120,14 @@ export function ImageResize() {
                   Download
                 </a>
               )}
-              <GhostButton onClick={() => { setSrc(null); setResultUrl(null); }}>Choose another</GhostButton>
+              <GhostButton
+                onClick={() => {
+                  setSrc(null);
+                  setResultUrl(null);
+                }}
+              >
+                Choose another
+              </GhostButton>
             </div>
           </div>
         </div>

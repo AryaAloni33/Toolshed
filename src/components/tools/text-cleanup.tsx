@@ -15,9 +15,14 @@ export function TextCleanup() {
     let s = input;
     if (opts.removeTabs) s = s.replace(/\t/g, " ");
     if (opts.collapseSpaces) s = s.replace(/[ \t]+/g, " ");
-    if (opts.trimLines) s = s.split("\n").map((l) => l.trim()).join("\n");
+    if (opts.trimLines)
+      s = s
+        .split("\n")
+        .map((l) => l.trim())
+        .join("\n");
     if (opts.removeEmptyLines) s = s.split(/\n+/).filter(Boolean).join("\n");
-    if (opts.smartQuotes) s = s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');
+    if (opts.smartQuotes)
+      s = s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');
     return s;
   }, [input, opts]);
 
