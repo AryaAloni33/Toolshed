@@ -47,39 +47,55 @@ export function PdfToImage() {
       const loadingTask = pdfjsLib.getDocument(arrayBuffer);
       const pdf = await loadingTask.promise;
 
-      toast.success(`Converting ${pdf.numPages} pages...`);
+      toast.success(`Converting ${pdf.numPages} page${pdf.numPages > 1 ? "s" : ""}...`);
 
-      const zip = new JSZip();
-      const folderName = file.name.replace(/\.pdf$/i, "");
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
+      if (pdf.numPages === 1) {
+        // Single page → download directly as PNG
+        const page = await pdf.getPage(1);
         const viewport = page.getViewport({ scale: 2.0 });
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
-
-        if (!context) continue;
-
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // @ts-ignore
-        await page.render({
-          canvasContext: context,
-          viewport: viewport
-        }).promise;
-
-        const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
-        if (blob) {
-          const arrayBuf = await blob.arrayBuffer();
-          zip.file(`page-${String(i).padStart(3, "0")}.png`, arrayBuf);
+        if (context) {
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          // @ts-ignore
+          await page.render({ canvasContext: context, viewport }).promise;
+          const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+          if (blob) {
+            saveAs(blob, `${file.name.replace(/\.pdf$/i, "")}.png`);
+            toast.success("Downloaded as PNG!");
+          }
         }
+      } else {
+        // Multiple pages → bundle into ZIP
+        const zip = new JSZip();
+        const folderName = file.name.replace(/\.pdf$/i, "");
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: 2.0 });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          if (!context) continue;
+
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          // @ts-ignore
+          await page.render({ canvasContext: context, viewport }).promise;
+
+          const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+          if (blob) {
+            const arrayBuf = await blob.arrayBuffer();
+            zip.file(`page-${String(i).padStart(3, "0")}.png`, arrayBuf);
+          }
+        }
+
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        saveAs(zipBlob, `${folderName}-images.zip`);
+        toast.success(`Downloaded ${pdf.numPages} pages as ZIP!`);
       }
-
-      const zipBlob = await zip.generateAsync({ type: "blob" });
-      saveAs(zipBlob, `${folderName}-images.zip`);
-
-      toast.success(`Downloaded ${pdf.numPages} pages as ZIP!`);
     } catch (error) {
       console.error(error);
       toast.error("Failed to convert PDF to images");
