@@ -51,7 +51,7 @@ function Index() {
             </span>
             <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
               A quiet workshop for{" "}
-              <span className="italic text-accent">everyday</span> digital work.
+              <span className="italic text-accent dark:text-[oklch(0.62_0.13_45)]">everyday</span> digital work.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
               Toolshed gathers the small utilities you keep googling — PDF
