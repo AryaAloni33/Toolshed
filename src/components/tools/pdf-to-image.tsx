@@ -1,5 +1,4 @@
 import { useState } from "react";
-import * as pdfjsLib from "pdfjs-dist";
 import pkg from 'file-saver';
 const { saveAs } = pkg;
 import { toast } from "sonner";
@@ -7,142 +6,136 @@ import { FileImage, Download, RefreshCw } from "lucide-react";
 import { PrimaryButton, ToolPanel, GhostButton } from "./shared";
 import { Dropzone } from "./dropzone";
 
-// Initialize pdfjs worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+// pdfjsLib will be loaded dynamically
 
 export function PdfToImage() {
   const [file, setFile] = useState<File | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const handleFile = async (f: File) => {
-    setProcessing(true);
-    const loadingToast = toast.loading("Loading PDF previews...");
-    try {
-      const arrayBuffer = await f.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      const numPages = Math.min(pdf.numPages, 10); // Preview first 10 pages
-      const newPreviews: string[] = [];
-
-      for (let i = 1; i <= numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 0.5 });
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        if (!context) continue;
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        await (page as any).render({ canvasContext: context, viewport })
-          .promise;
-        newPreviews.push(canvas.toDataURL("image/png"));
-      }
-
-      setPreviews(newPreviews);
-      setFile(f);
-      toast.success(`Loaded ${pdf.numPages} pages`, { id: loadingToast });
-    } catch (e) {
-      console.error(e);
-      toast.error("Failed to load PDF.", { id: loadingToast });
-    } finally {
-      setProcessing(false);
+  const handleFileSelect = (files: File[]) => {
+    if (files.length > 0) {
+      setFile(files[0]);
+      // Extract page count (optional, requires loading pdf)
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const pdfjsLib = await import("pdfjs-dist");
+          pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+          const loadingTask = pdfjsLib.getDocument(reader.result as ArrayBuffer);
+          const pdf = await loadingTask.promise;
+          setTotalPages(pdf.numPages);
+        } catch (error) {
+          toast.error("Failed to read PDF pages");
+        }
+      };
+      reader.readAsArrayBuffer(files[0]);
     }
   };
 
-  const convertAll = async () => {
+  const handleConvert = async () => {
     if (!file) return;
     setProcessing(true);
-    const loadingToast = toast.loading("Converting all pages to images...");
+
     try {
+      const pdfjsLib = await import("pdfjs-dist");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+
       const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const loadingTask = pdfjsLib.getDocument(arrayBuffer);
+      const pdf = await loadingTask.promise;
+
+      toast.success(`Starting conversion of ${pdf.numPages} pages...`);
 
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 }); // High quality
+        const viewport = page.getViewport({ scale: 2.0 });
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
+
         if (!context) continue;
+
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
-        await (page as any).render({ canvasContext: context, viewport })
-          .promise;
-        const blob = await new Promise<Blob | null>((resolve) =>
-          canvas.toBlob(resolve, "image/png"),
-        );
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+
+        const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
         if (blob) {
-          saveAs(blob, `page_${i}_${file.name.replace(".pdf", "")}.png`);
+          saveAs(blob, `page-${i}.png`);
         }
       }
-      toast.success("Conversion complete!", { id: loadingToast });
-    } catch (e) {
-      toast.error("Conversion failed.", { id: loadingToast });
+
+      toast.success("Conversion complete");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to convert PDF to images");
     } finally {
       setProcessing(false);
     }
   };
 
-  if (!file) {
-    return (
-      <Dropzone
-        accept="application/pdf"
-        onFile={handleFile}
-        hint="Convert PDF pages to PNG images"
-      />
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      <ToolPanel>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-border pb-4">
-            <div>
-              <h3 className="text-sm font-medium">{file.name}</h3>
-              <p className="text-[10px] text-muted-foreground">
-                Showing first {previews.length} pages
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <PrimaryButton onClick={convertAll} disabled={processing}>
-                {processing ? (
-                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Download className="h-3.5 w-3.5" />
-                )}
-                Download All PNGs
-              </PrimaryButton>
-              <GhostButton
-                onClick={() => {
-                  setFile(null);
-                  setPreviews([]);
-                }}
-              >
-                Choose another
-              </GhostButton>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
-            {previews.map((src, i) => (
-              <div
-                key={i}
-                className="group relative aspect-[3/4] overflow-hidden rounded-md border border-border bg-muted/30"
-              >
-                <img
-                  src={src}
-                  alt={`Page ${i + 1}`}
-                  className="h-full w-full object-contain p-1"
-                />
-                <div className="absolute bottom-1 right-1 rounded bg-background/80 px-1 text-[8px] font-bold text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
-                  PAGE {i + 1}
+    <div className="space-y-6">
+      {!file ? (
+        <Dropzone
+          onFilesSelect={handleFileSelect}
+          accept={{ "application/pdf": [".pdf"] }}
+          maxFiles={1}
+          title="Drop PDF to convert"
+          description="Each page will be saved as a separate image"
+        />
+      ) : (
+        <ToolPanel
+          title="PDF to Image"
+          icon={FileImage}
+          onClear={() => setFile(null)}
+        >
+          <div className="space-y-4">
+            <div className="flex items-center justify-between rounded-lg border border-border p-4">
+              <div className="flex items-center gap-3">
+                <FileImage className="h-8 w-8 text-accent" />
+                <div>
+                  <div className="text-sm font-medium">{file.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB • {totalPages} pages
+                  </div>
                 </div>
               </div>
-            ))}
+              <div className="flex gap-2">
+                <PrimaryButton
+                  onClick={handleConvert}
+                  loading={processing}
+                  icon={processing ? RefreshCw : Download}
+                >
+                  {processing ? "Converting..." : "Convert to Images"}
+                </PrimaryButton>
+                <GhostButton onClick={() => setFile(null)}>Remove</GhostButton>
+              </div>
+            </div>
+
+            <div className="rounded-lg bg-muted/30 p-4 text-xs text-muted-foreground">
+              <h4 className="mb-2 font-medium text-foreground">Note:</h4>
+              <ul className="list-inside list-disc space-y-1">
+                <li>High-quality 2x scale rendering</li>
+                <li>Each page is converted to a PNG file</li>
+                <li>Processing happens entirely in your browser</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </ToolPanel>
+        </ToolPanel>
+      )}
+
+      {file && (
+        <ToolPanel title="Options" icon={FileImage} className="max-w-md">
+          <div className="space-y-4 p-4 text-sm">
+            <p>Support for choosing specific pages and image formats coming soon.</p>
+          </div>
+        </ToolPanel>
+      )}
     </div>
   );
 }
