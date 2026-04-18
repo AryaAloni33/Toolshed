@@ -24,7 +24,7 @@ import {
   Link2,
   KeyRound,
   StickyNote, Clipboard, ListChecks, QrCode, Columns, Clock,
-  Lock, Shield, Key, Database, Table, Percent, Activity, Search
+  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -390,6 +390,24 @@ export const tools: Tool[] = [
     tint: "moss",
     implemented: true,
   },
+  {
+    slug: "color-converter",
+    name: "Color Converter",
+    description: "Convert HEX, RGB, HSL, and LCH.",
+    icon: Palette,
+    category: "developer",
+    tint: "moss",
+    implemented: true,
+  },
+  {
+    slug: "bcrypt-generator",
+    name: "Bcrypt Generator",
+    description: "Hash passwords with bcrypt securely.",
+    icon: Shield,
+    category: "developer",
+    tint: "moss",
+    implemented: true,
+  },
 
   // Productivity
   {
@@ -480,6 +498,24 @@ export const tools: Tool[] = [
     name: "HTTP Status Codes",
     description: "A fast reference for all HTTP response codes.",
     icon: Activity,
+    category: "reference",
+    tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "cron-explainer",
+    name: "Cron Explainer",
+    description: "Translate cron syntax into plain English.",
+    icon: Clock,
+    category: "reference",
+    tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "git-cheatsheet",
+    name: "Git Cheatsheet",
+    description: "Quick commands for everyday git workflows.",
+    icon: GitBranch,
     category: "reference",
     tint: "rust",
     implemented: true,

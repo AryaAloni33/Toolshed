@@ -42,6 +42,10 @@ import { WordToPdf } from "./word-to-pdf";
 import { ExcelToPdf } from "./excel-to-pdf";
 import { PdfToWord } from "./pdf-to-word";
 import { PdfToExcel } from "./pdf-to-excel";
+import { CronExplainer } from "./cron-explainer";
+import { GitCheatsheet } from "./git-cheatsheet";
+import { ColorConverter } from "./color-converter";
+import { BcryptGenerator } from "./bcrypt-generator";
 
 export function ToolRenderer({ slug }: { slug: string }) {
   switch (slug) {
@@ -118,6 +122,10 @@ export function ToolRenderer({ slug }: { slug: string }) {
     case "excel-to-pdf": return <ExcelToPdf />;
     case "pdf-to-word": return <PdfToWord />;
     case "pdf-to-excel": return <PdfToExcel />;
+    case "cron-explainer": return <CronExplainer />;
+    case "git-cheatsheet": return <GitCheatsheet />;
+    case "color-converter": return <ColorConverter />;
+    case "bcrypt-generator": return <BcryptGenerator />;
     default: return null;
   }
 }
