@@ -215,6 +215,15 @@ export const tools: Tool[] = [
     implemented: true,
   },
   {
+    slug: "text-to-latex",
+    name: "Text → LaTeX",
+    description: "Safely escape text for LaTeX.",
+    icon: BookOpen,
+    category: "text",
+    tint: "clay",
+    implemented: true,
+  },
+  {
     slug: "summarizer",
     name: "Summarizer",
     description: "Condense long passages to key points.",
