@@ -5,10 +5,7 @@ import { toast } from "sonner";
 import { FileImage, Download, RefreshCw, Loader2 } from "lucide-react";
 import { PrimaryButton, ToolPanel, GhostButton } from "./shared";
 import { Dropzone } from "./dropzone";
-import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 export function PdfToImage() {
   const [file, setFile] = useState<File | null>(null);
@@ -21,6 +18,8 @@ export function PdfToImage() {
       const reader = new FileReader();
       reader.onload = async () => {
         try {
+          const pdfjsLib = await import("pdfjs-dist");
+          pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
           const loadingTask = pdfjsLib.getDocument(reader.result as ArrayBuffer);
           const pdf = await loadingTask.promise;
           setTotalPages(pdf.numPages);
@@ -38,6 +37,8 @@ export function PdfToImage() {
     setProcessing(true);
 
     try {
+      const pdfjsLib = await import("pdfjs-dist");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
       const arrayBuffer = await file.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument(arrayBuffer);
       const pdf = await loadingTask.promise;
