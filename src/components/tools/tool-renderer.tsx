@@ -47,6 +47,7 @@ import { GitCheatsheet } from "./git-cheatsheet";
 import { ColorConverter } from "./color-converter";
 import { BcryptGenerator } from "./bcrypt-generator";
 import { TextToLatex } from "./text-to-latex";
+import { ApiClient } from "./api-client";
 
 export function ToolRenderer({ slug }: { slug: string }) {
   switch (slug) {
@@ -128,6 +129,7 @@ export function ToolRenderer({ slug }: { slug: string }) {
     case "color-converter": return <ColorConverter />;
     case "bcrypt-generator": return <BcryptGenerator />;
     case "text-to-latex": return <TextToLatex />;
+    case "api-client": return <ApiClient />;
     default: return null;
   }
 }

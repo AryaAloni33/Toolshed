@@ -36,13 +36,26 @@ export function ColorConverter() {
                 <div className="space-y-6">
                     <div>
                         <FieldLabel>Color Input</FieldLabel>
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Hex, RGB, HSL, or color name..."
-                            className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-sm outline-none focus:border-foreground/30"
-                        />
+                        <div className="flex items-center gap-3">
+                            <label
+                                className="relative block h-[42px] w-16 shrink-0 cursor-pointer overflow-hidden rounded-md border border-border focus-within:ring-2 focus-within:ring-ring"
+                                title="Pick a color"
+                            >
+                                <input
+                                    type="color"
+                                    value={color ? color.toHex() : "#000000"}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    className="absolute -inset-4 h-[200%] w-[200%] cursor-pointer border-0 bg-transparent p-0"
+                                />
+                            </label>
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Hex, RGB, HSL, or color name..."
+                                className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-sm outline-none focus:border-foreground/30"
+                            />
+                        </div>
                     </div>
 
                     {color ? (

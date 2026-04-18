@@ -292,6 +292,15 @@ export const tools: Tool[] = [
 
   // Developer
   {
+    slug: "api-client",
+    name: "API Client",
+    description: "Send HTTP requests and analyze responses with AI.",
+    icon: Activity,
+    category: "developer",
+    tint: "moss",
+    implemented: true,
+  },
+  {
     slug: "json-format",
     name: "JSON formatter",
     description: "Pretty print, validate, minify.",
