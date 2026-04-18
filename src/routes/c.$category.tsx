@@ -46,6 +46,13 @@ function CategoryPage() {
   const { category } = Route.useLoaderData();
   const list = toolsByCategory(category.id as ToolCategory);
 
+  const isDocuments = category.id === "documents";
+
+  // Document groupings
+  const toPdf = list.filter((t) => t.slug.endsWith("-to-pdf"));
+  const fromPdf = list.filter((t) => t.slug.startsWith("pdf-to-"));
+  const pdfUtils = list.filter((t) => !t.slug.endsWith("-to-pdf") && !t.slug.startsWith("pdf-to-"));
+
   return (
     <AppShell>
       <div className="mx-auto max-w-6xl px-4 py-10 md:px-8">
@@ -64,11 +71,46 @@ function CategoryPage() {
           </span>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((t) => (
-            <ToolCard key={t.slug} tool={t} />
-          ))}
-        </div>
+        {isDocuments ? (
+          <div className="space-y-10">
+            <section>
+              <h2 className="mb-4 font-display text-xl font-semibold">PDF Utilities</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {pdfUtils.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            </section>
+
+            <hr className="border-border" />
+
+            <section>
+              <h2 className="mb-4 font-display text-xl font-semibold">Convert to PDF</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {toPdf.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            </section>
+
+            <hr className="border-border" />
+
+            <section>
+              <h2 className="mb-4 font-display text-xl font-semibold">Convert from PDF</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {fromPdf.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            </section>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((t) => (
+              <ToolCard key={t.slug} tool={t} />
+            ))}
+          </div>
+        )}
       </div>
     </AppShell>
   );

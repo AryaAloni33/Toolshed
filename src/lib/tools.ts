@@ -109,6 +109,7 @@ export const tools: Tool[] = [
     icon: FileType2,
     category: "documents",
     tint: "rust",
+    implemented: true,
   },
   {
     slug: "excel-to-pdf",
@@ -117,6 +118,25 @@ export const tools: Tool[] = [
     icon: FileText,
     category: "documents",
     tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "pdf-to-word",
+    name: "PDF → Word",
+    description: "Convert PDFs back to .docx.",
+    icon: FileType2,
+    category: "documents",
+    tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "pdf-to-excel",
+    name: "PDF → Excel",
+    description: "Extract tables into spreadsheets.",
+    icon: FileText,
+    category: "documents",
+    tint: "rust",
+    implemented: true,
   },
 
   // Images

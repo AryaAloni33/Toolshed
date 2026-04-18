@@ -38,6 +38,10 @@ import { PercentageCalculator } from "./percentage-calculator";
 import { HttpStatusCodes } from "./http-status-codes";
 import { RegexTester } from "./regex-tester";
 import { Base64ImageEncoder } from "./base64-image-encoder";
+import { WordToPdf } from "./word-to-pdf";
+import { ExcelToPdf } from "./excel-to-pdf";
+import { PdfToWord } from "./pdf-to-word";
+import { PdfToExcel } from "./pdf-to-excel";
 
 export function ToolRenderer({ slug }: { slug: string }) {
   switch (slug) {
@@ -110,6 +114,10 @@ export function ToolRenderer({ slug }: { slug: string }) {
     case "http-codes": return <HttpStatusCodes />;
     case "regex-tester": return <RegexTester />;
     case "base64-image": return <Base64ImageEncoder />;
+    case "word-to-pdf": return <WordToPdf />;
+    case "excel-to-pdf": return <ExcelToPdf />;
+    case "pdf-to-word": return <PdfToWord />;
+    case "pdf-to-excel": return <PdfToExcel />;
     default: return null;
   }
 }
