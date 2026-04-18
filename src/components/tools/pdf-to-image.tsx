@@ -37,13 +37,20 @@ export function PdfToImage() {
     setProcessing(true);
 
     try {
-      const pdfjsLib = await import("pdfjs-dist");
+      const [pdfjsLib, JSZip] = await Promise.all([
+        import("pdfjs-dist"),
+        import("jszip").then((m) => m.default),
+      ]);
       pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+
       const arrayBuffer = await file.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument(arrayBuffer);
       const pdf = await loadingTask.promise;
 
-      toast.success(`Starting conversion of ${pdf.numPages} pages...`);
+      toast.success(`Converting ${pdf.numPages} pages...`);
+
+      const zip = new JSZip();
+      const folderName = file.name.replace(/\.pdf$/i, "");
 
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
@@ -64,11 +71,15 @@ export function PdfToImage() {
 
         const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
         if (blob) {
-          saveAs(blob, `page-${i}.png`);
+          const arrayBuf = await blob.arrayBuffer();
+          zip.file(`page-${String(i).padStart(3, "0")}.png`, arrayBuf);
         }
       }
 
-      toast.success("Conversion complete");
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      saveAs(zipBlob, `${folderName}-images.zip`);
+
+      toast.success(`Downloaded ${pdf.numPages} pages as ZIP!`);
     } catch (error) {
       console.error(error);
       toast.error("Failed to convert PDF to images");
