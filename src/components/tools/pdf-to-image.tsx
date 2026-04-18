@@ -1,6 +1,7 @@
 import { useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
-import { saveAs } from "file-saver";
+import pkg from 'file-saver';
+const { saveAs } = pkg;
 import { toast } from "sonner";
 import { FileImage, Download, RefreshCw } from "lucide-react";
 import { PrimaryButton, ToolPanel, GhostButton } from "./shared";

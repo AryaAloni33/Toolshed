@@ -1,6 +1,7 @@
 import { useState } from "react";
 import JSZip from "jszip";
-import { saveAs } from "file-saver";
+import pkg from 'file-saver';
+const { saveAs } = pkg;
 import { toast } from "sonner";
 import { Archive, X, File as FileIcon, Plus } from "lucide-react";
 import { PrimaryButton, ToolPanel, GhostButton } from "./shared";

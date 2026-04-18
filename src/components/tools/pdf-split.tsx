@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
-import { saveAs } from "file-saver";
+import pkg from 'file-saver';
+const { saveAs } = pkg;
 import { toast } from "sonner";
 import { Scissors, FileText, Download } from "lucide-react";
 import { PrimaryButton, ToolPanel, GhostButton } from "./shared";

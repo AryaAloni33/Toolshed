@@ -3,7 +3,8 @@ import Papa from "papaparse";
 import { Table, Braces, RefreshCw, Copy, Download } from "lucide-react";
 import { ToolPanel, FieldLabel, PrimaryButton, GhostButton, CopyButton } from "./shared";
 import { toast } from "sonner";
-import { saveAs } from "file-saver";
+import pkg from 'file-saver';
+const { saveAs } = pkg;
 
 export function CsvJsonConverter() {
     const [input, setInput] = useState("");

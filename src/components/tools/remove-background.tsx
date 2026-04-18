@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import { Eraser, Download, Loader2 } from "lucide-react";
 import { PrimaryButton, ToolPanel, GhostButton } from "./shared";
 import { Dropzone } from "./dropzone";
-import { saveAs } from "file-saver";
+import pkg from 'file-saver';
+const { saveAs } = pkg;
 
 export function RemoveBackground() {
   const [src, setSrc] = useState<string | null>(null);
