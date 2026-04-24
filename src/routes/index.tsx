@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Zap, Lock, Layers } from "lucide-react";
+import { ArrowRight, Zap, Lock, Layers, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { ToolCard } from "@/components/tool-card";
 import { categories, tools, getTool } from "@/lib/tools";
 import { useRecentTools } from "@/hooks/use-recent-tools";
 import { categoryTints } from "@/lib/category-tints";
+import { AiToolBot } from "@/components/ai-tool-bot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,29 +48,27 @@ function Index() {
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-moss" />
-              v0.1 — 40 tools live
+              Over 40 tools live
             </span>
             <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
               A quiet workshop for{" "}
               <span className="italic text-accent dark:text-[oklch(0.62_0.13_45)]">everyday</span> digital work.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Toolshed gathers the small utilities you keep googling — PDF
-              tools, image cleanup, text helpers, JSON, and more — into one
-              focused workspace. No accounts. No upsells. Just press{" "}
-              <kbd className="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-xs">
-                ⌘K
-              </kbd>{" "}
-              and go.
+              Every utility you keep googling, in one focused workspace.
+              Search 40+ tools instantly, or browse the entire shed. No accounts, no clutter.
             </p>
+
+            <div className="mt-8">
+              <AiToolBot />
+            </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                to="/c/$category"
-                params={{ category: "documents" }}
+                to="/browse"
                 className="inline-flex items-center gap-2 rounded-md bg-foreground px-4 py-2.5 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
               >
-                Browse the shed <ArrowRight className="h-4 w-4" />
+                Browse all tools <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/t/$slug"

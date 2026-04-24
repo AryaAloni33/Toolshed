@@ -17,6 +17,7 @@ import {
   Github,
   Database,
   Activity,
+  Globe
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { CommandPalette } from "./command-palette";
@@ -24,14 +25,14 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutGrid },
+  { to: "/browse", label: "All Tools", icon: Search },
   { to: "/c/$category", params: { category: "documents" }, label: "Documents", icon: FileText },
   { to: "/c/$category", params: { category: "images" }, label: "Images", icon: ImageIcon },
   { to: "/c/$category", params: { category: "text" }, label: "Text", icon: Type },
   { to: "/c/$category", params: { category: "ai" }, label: "AI", icon: Brain },
   { to: "/c/$category", params: { category: "developer" }, label: "Developer", icon: Code2 },
   { to: "/c/$category", params: { category: "productivity" }, label: "Productivity", icon: ListTodo },
-  { to: "/c/$category", params: { category: "data" }, label: "Data", icon: Database },
-  { to: "/c/$category", params: { category: "reference" }, label: "Reference", icon: Activity },
+  { to: "/c/$category", params: { category: "website" }, label: "Website", icon: Globe },
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -143,7 +144,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span>
               © {new Date().getFullYear()} Toolshed — built for focused work.
             </span>
-            <span className="font-mono">v0.1 · made with care</span>
           </div>
         </footer>
       </div>

@@ -53,6 +53,11 @@ import { AiCommitGenerator } from "./ai-commit-generator";
 import { HtmlToJsx } from "./html-to-jsx";
 import { CssToTailwind } from "./css-to-tailwind";
 import { FaviconGenerator } from "./favicon-generator";
+import { SvgToJsx } from "./svg-to-jsx";
+import { ShadowGenerator } from "./shadow-generator";
+import { CssClampGenerator } from "./css-clamp-generator";
+import { AiColorScout } from "./ai-color-scout";
+import { AspectRatioCalculator } from "./aspect-ratio-calculator";
 
 export function ToolRenderer({ slug }: { slug: string }) {
   switch (slug) {
@@ -140,6 +145,11 @@ export function ToolRenderer({ slug }: { slug: string }) {
     case "html-to-jsx": return <HtmlToJsx />;
     case "css-to-tailwind": return <CssToTailwind />;
     case "favicon-gen": return <FaviconGenerator />;
+    case "svg-to-jsx": return <SvgToJsx />;
+    case "shadow-gen": return <ShadowGenerator />;
+    case "css-clamp": return <CssClampGenerator />;
+    case "ai-palette": return <AiColorScout />;
+    case "aspect-ratio": return <AspectRatioCalculator />;
     default: return null;
   }
 }

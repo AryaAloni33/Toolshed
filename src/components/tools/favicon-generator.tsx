@@ -1,20 +1,30 @@
 import { useState, useRef } from "react";
-import { Layers, Loader2, Download, Upload, FileJson } from "lucide-react";
+import { Layers, Loader2, Download, Upload, FileJson, Check } from "lucide-react";
 import { ToolPanel, PrimaryButton, FieldLabel } from "./shared";
 import { toast } from "sonner";
+import JSZip from "jszip";
+import { cn } from "@/lib/utils";
 
 const SIZES = [
-  { name: "favicon-16x16.png", size: 16 },
-  { name: "favicon-32x32.png", size: 32 },
-  { name: "apple-touch-icon.png", size: 180 },
-  { name: "android-chrome-192x192.png", size: 192 },
-  { name: "android-chrome-512x512.png", size: 512 },
+  { id: "fav16", name: "favicon-16x16.png", size: 16 },
+  { id: "fav32", name: "favicon-32x32.png", size: 32 },
+  { id: "apple", name: "apple-touch-icon.png", size: 180 },
+  { id: "and192", name: "android-chrome-192x192.png", size: 192 },
+  { id: "and512", name: "android-chrome-512x512.png", size: 512 },
 ];
 
 export function FaviconGenerator() {
   const [image, setImage] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set([...SIZES.map(s => s.id), "manifest"]));
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const toggleId = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedIds(next);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -27,58 +37,69 @@ export function FaviconGenerator() {
     reader.readAsDataURL(file);
   };
 
-  const downloadAll = async () => {
+  const downloadZip = async () => {
     if (!image || !canvasRef.current) return;
+    if (selectedIds.size === 0) {
+      toast.error("Please select at least one asset to generate");
+      return;
+    }
+
     setGenerating(true);
+    const zip = new JSZip();
 
     try {
-      // In a real app we might use JSZip here, but for simplicity we'll download individually or just the main ones
-      // For now let's provide a way to download the most common ones
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      if (!ctx) throw new Error("Could not get canvas context");
 
       const img = new Image();
       img.src = image;
-      await new Promise((resolve) => (img.onload = resolve));
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
 
+      // Add selected images to zip
       for (const item of SIZES) {
+        if (!selectedIds.has(item.id)) continue;
+
         canvas.width = item.size;
         canvas.height = item.size;
         ctx.clearRect(0, 0, item.size, item.size);
         ctx.drawImage(img, 0, 0, item.size, item.size);
 
-        const link = document.createElement("a");
-        link.download = item.name;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        // Small delay to prevent browser from blocking multiple downloads
-        await new Promise(r => setTimeout(r, 100));
+        const dataUrl = canvas.toDataURL("image/png");
+        const base64Data = dataUrl.split(",")[1];
+        zip.file(item.name, base64Data, { base64: true });
       }
 
-      // Also download manifest.json
-      const manifest = {
-        name: "My App",
-        short_name: "App",
-        icons: SIZES.filter(s => s.size >= 192).map(s => ({
-          src: `/${s.name}`,
-          sizes: `${s.size}x${s.size}`,
-          type: "image/png"
-        })),
-        theme_color: "#ffffff",
-        background_color: "#ffffff",
-        display: "standalone"
-      };
+      // Add manifest if selected
+      if (selectedIds.has("manifest")) {
+        const manifest = {
+          name: "Toolshed App",
+          short_name: "Toolshed",
+          icons: SIZES.filter(s => s.size >= 192 && selectedIds.has(s.id)).map(s => ({
+            src: `/${s.name}`,
+            sizes: `${s.size}x${s.size}`,
+            type: "image/png"
+          })),
+          theme_color: "#ffffff",
+          background_color: "#ffffff",
+          display: "standalone"
+        };
+        zip.file("site.webmanifest", JSON.stringify(manifest, null, 2));
+      }
 
-      const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/json" });
-      const manifestLink = document.createElement("a");
-      manifestLink.download = "site.webmanifest";
-      manifestLink.href = URL.createObjectURL(manifestBlob);
-      manifestLink.click();
+      const content = await zip.generateAsync({ type: "blob" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(content);
+      link.download = "favicon-package.zip";
+      link.click();
 
-      toast.success("All assets generated and downloaded!");
+      toast.success("Favicon package generated and downloaded!");
     } catch (error) {
-      toast.error("Failed to generate assets");
+      console.error(error);
+      toast.error("Failed to generate zip package");
     } finally {
       setGenerating(false);
     }
@@ -116,32 +137,64 @@ export function FaviconGenerator() {
         {image && (
           <div className="mt-8 flex flex-col items-center justify-center gap-6">
             <div className="w-full">
-              <FieldLabel>Assets to be generated</FieldLabel>
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <FieldLabel>Select assets to include in ZIP</FieldLabel>
+              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {SIZES.map((s) => (
-                  <div key={s.name} className="flex items-center gap-2 rounded-md border border-border bg-muted/20 p-2 text-[10px] font-medium uppercase tracking-tight">
-                    <div className="h-4 w-4 rounded-sm bg-muted-foreground/20" />
-                    <span className="flex-1 truncate">{s.name}</span>
-                    <span className="text-muted-foreground opacity-60">{s.size}x{s.size}</span>
-                  </div>
+                  <button
+                    key={s.id}
+                    onClick={() => toggleId(s.id)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg border p-3 text-left transition-all",
+                      selectedIds.has(s.id)
+                        ? "border-foreground/20 bg-foreground/[0.03] shadow-sm"
+                        : "border-border bg-card opacity-60 grayscale hover:opacity-100 hover:grayscale-0"
+                    )}
+                  >
+                    <div className={cn(
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
+                      selectedIds.has(s.id) ? "bg-foreground border-foreground text-background" : "bg-background border-border"
+                    )}>
+                      {selectedIds.has(s.id) && <Check className="h-3 w-3" strokeWidth={3} />}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-xs font-medium uppercase tracking-tight">{s.name}</div>
+                      <div className="text-[10px] text-muted-foreground">{s.size}x{s.size}px</div>
+                    </div>
+                  </button>
                 ))}
-                <div className="flex items-center gap-2 rounded-md border border-border bg-muted/20 p-2 text-[10px] font-medium uppercase tracking-tight">
-                  <FileJson className="h-3.5 w-3.5 text-muted-foreground/60" />
-                  <span className="flex-1 truncate">site.webmanifest</span>
-                </div>
+                <button
+                  onClick={() => toggleId("manifest")}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg border p-3 text-left transition-all",
+                    selectedIds.has("manifest")
+                      ? "border-foreground/20 bg-foreground/[0.03] shadow-sm"
+                      : "border-border bg-card opacity-60 grayscale hover:opacity-100 hover:grayscale-0"
+                  )}
+                >
+                  <div className={cn(
+                    "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
+                    selectedIds.has("manifest") ? "bg-foreground border-foreground text-background" : "bg-background border-border"
+                  )}>
+                    {selectedIds.has("manifest") && <Check className="h-3 w-3" strokeWidth={3} />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-xs font-medium uppercase tracking-tight">site.webmanifest</div>
+                    <div className="text-[10px] text-muted-foreground">JSON Config</div>
+                  </div>
+                </button>
               </div>
             </div>
 
-            <PrimaryButton onClick={downloadAll} disabled={generating} className="w-full sm:w-auto h-12 px-8 text-base">
+            <PrimaryButton onClick={downloadZip} disabled={generating} className="w-full sm:w-auto h-12 px-8 text-base">
               {generating ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Generating...
+                  Generating ZIP...
                 </>
               ) : (
                 <>
                   <Download className="h-5 w-5" />
-                  Download Assets
+                  Generate & Download ZIP
                 </>
               )}
             </PrimaryButton>

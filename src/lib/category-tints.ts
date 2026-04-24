@@ -7,7 +7,8 @@ export type CategoryTintKey =
   | "developer"
   | "productivity"
   | "data"
-  | "reference";
+  | "reference"
+  | "website";
 
 export type CategoryTint = {
   fg: string;
@@ -70,5 +71,11 @@ export const categoryTints: Record<CategoryTintKey, CategoryTint> = {
     soft: "bg-tint-doc-soft",
     border: "border-tint-doc/30",
     bar: "bg-tint-doc",
+  },
+  website: {
+    fg: "text-tint-web",
+    soft: "bg-tint-web-soft",
+    border: "border-tint-web/30",
+    bar: "bg-tint-web",
   },
 };
