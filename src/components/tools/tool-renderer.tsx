@@ -48,6 +48,11 @@ import { ColorConverter } from "./color-converter";
 import { BcryptGenerator } from "./bcrypt-generator";
 import { TextToLatex } from "./text-to-latex";
 import { ApiClient } from "./api-client";
+import { AiRegexExplainer } from "./ai-regex-explainer";
+import { AiCommitGenerator } from "./ai-commit-generator";
+import { HtmlToJsx } from "./html-to-jsx";
+import { CssToTailwind } from "./css-to-tailwind";
+import { FaviconGenerator } from "./favicon-generator";
 
 export function ToolRenderer({ slug }: { slug: string }) {
   switch (slug) {
@@ -130,6 +135,11 @@ export function ToolRenderer({ slug }: { slug: string }) {
     case "bcrypt-generator": return <BcryptGenerator />;
     case "text-to-latex": return <TextToLatex />;
     case "api-client": return <ApiClient />;
+    case "ai-regex-explainer": return <AiRegexExplainer />;
+    case "ai-commit-gen": return <AiCommitGenerator />;
+    case "html-to-jsx": return <HtmlToJsx />;
+    case "css-to-tailwind": return <CssToTailwind />;
+    case "favicon-gen": return <FaviconGenerator />;
     default: return null;
   }
 }

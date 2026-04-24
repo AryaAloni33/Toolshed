@@ -24,7 +24,7 @@ import {
   Link2,
   KeyRound,
   StickyNote, Clipboard, ListChecks, QrCode, Columns, Clock,
-  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch
+  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch, GitCommit, Wind, Code2, Layers
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -32,7 +32,6 @@ export type ToolCategory =
   | "documents"
   | "images"
   | "text"
-  | "files"
   | "ai"
   | "developer"
   | "productivity"
@@ -55,7 +54,6 @@ export const categories: { id: ToolCategory; label: string; blurb: string }[] =
     { id: "documents", label: "Documents", blurb: "PDFs, Word, Excel" },
     { id: "images", label: "Images", blurb: "Resize, convert, clean" },
     { id: "text", label: "Text", blurb: "Edit, count, transform" },
-    { id: "files", label: "Files", blurb: "Convert, archive" },
     { id: "ai", label: "AI", blurb: "Summarize, extract" },
     { id: "developer", label: "Developer", blurb: "Encode, format" },
     { id: "productivity", label: "Productivity", blurb: "Notes, lists" },
@@ -185,6 +183,15 @@ export const tools: Tool[] = [
     tint: "moss",
     implemented: true,
   },
+  {
+    slug: "favicon-gen",
+    name: "Favicon Generator",
+    description: "Generate favicons and manifest from one image.",
+    icon: Layers,
+    category: "images",
+    tint: "moss",
+    implemented: true,
+  },
 
   // Text
   {
@@ -228,38 +235,11 @@ export const tools: Tool[] = [
     name: "Summarizer",
     description: "Condense long passages to key points.",
     icon: Sparkles,
-    category: "text",
+    category: "ai",
     tint: "clay",
     implemented: true,
   },
 
-  // Files
-  {
-    slug: "file-convert",
-    name: "File converter",
-    description: "Convert across common file formats.",
-    icon: RefreshCw,
-    category: "files",
-    tint: "ink",
-  },
-  {
-    slug: "zip-files",
-    name: "Zip files",
-    description: "Bundle a folder into a single archive.",
-    icon: Archive,
-    category: "files",
-    tint: "ink",
-    implemented: true,
-  },
-  {
-    slug: "unzip",
-    name: "Unzip",
-    description: "Extract files from any .zip archive.",
-    icon: FileArchive,
-    category: "files",
-    tint: "ink",
-    implemented: true,
-  },
 
   // AI
   {
@@ -289,13 +269,40 @@ export const tools: Tool[] = [
     tint: "rust",
     implemented: true,
   },
+  {
+    slug: "ai-regex-explainer",
+    name: "Regex Explainer",
+    description: "AI-powered breakdown of complex regular expressions.",
+    icon: Search,
+    category: "ai",
+    tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "ai-commit-gen",
+    name: "Commit Generator",
+    description: "Turn your git diff into a professional commit message.",
+    icon: GitCommit,
+    category: "ai",
+    tint: "rust",
+    implemented: true,
+  },
 
   // Developer
   {
-    slug: "api-client",
-    name: "API Client",
-    description: "Send HTTP requests and analyze responses with AI.",
-    icon: Activity,
+    slug: "html-to-jsx",
+    name: "HTML → JSX",
+    description: "Convert HTML to React components with AI editing.",
+    icon: Code2,
+    category: "developer",
+    tint: "moss",
+    implemented: true,
+  },
+  {
+    slug: "css-to-tailwind",
+    name: "CSS → Tailwind",
+    description: "Map standard CSS to Tailwind utility classes.",
+    icon: Wind,
     category: "developer",
     tint: "moss",
     implemented: true,
@@ -478,15 +485,6 @@ export const tools: Tool[] = [
     name: "Unit Converter",
     description: "Convert between common units of measure.",
     icon: RefreshCw,
-    category: "productivity",
-    tint: "clay",
-    implemented: true,
-  },
-  {
-    slug: "percentage-calc",
-    name: "Percentage Calculator",
-    description: "Quickly calculate percentages and growth.",
-    icon: Percent,
     category: "productivity",
     tint: "clay",
     implemented: true,
