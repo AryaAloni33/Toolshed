@@ -27,7 +27,6 @@ const nav = [
   { to: "/c/$category", params: { category: "documents" }, label: "Documents", icon: FileText },
   { to: "/c/$category", params: { category: "images" }, label: "Images", icon: ImageIcon },
   { to: "/c/$category", params: { category: "text" }, label: "Text", icon: Type },
-  { to: "/c/$category", params: { category: "files" }, label: "Files", icon: Files },
   { to: "/c/$category", params: { category: "ai" }, label: "AI", icon: Brain },
   { to: "/c/$category", params: { category: "developer" }, label: "Developer", icon: Code2 },
   { to: "/c/$category", params: { category: "productivity" }, label: "Productivity", icon: ListTodo },
@@ -51,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         <div className="flex h-14 items-center gap-2 px-4">
           <Link to="/" className="flex items-center gap-2 overflow-hidden">
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-ink text-background font-display text-base font-semibold">
+            <span className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background font-display text-base font-semibold">
               t
             </span>
             {!collapsed && (
