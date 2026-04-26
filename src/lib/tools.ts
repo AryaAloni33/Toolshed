@@ -61,6 +61,15 @@ export const categories: { id: ToolCategory; label: string; blurb: string }[] =
 
 export const tools: Tool[] = [
   {
+    slug: "title-suggester",
+    name: "AI Title Suggester",
+    description: "Generate catchy and relevant titles for your projects with AI.",
+    icon: Sparkles,
+    category: "website",
+    tint: "moss",
+    implemented: true,
+  },
+  {
     slug: "svg-to-jsx",
     name: "SVG → JSX",
     description: "Clean up SVGs and convert them into React components.",

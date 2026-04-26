@@ -6,12 +6,44 @@ import JSZip from "jszip";
 import { cn } from "@/lib/utils";
 
 const SIZES = [
-  { id: "fav16", name: "favicon-16x16.png", size: 16 },
-  { id: "fav32", name: "favicon-32x32.png", size: 32 },
-  { id: "apple", name: "apple-touch-icon.png", size: 180 },
-  { id: "and192", name: "android-chrome-192x192.png", size: 192 },
-  { id: "and512", name: "android-chrome-512x512.png", size: 512 },
+  { id: "fav16", name: "favicon-16x16.ico", size: 16 },
+  { id: "fav32", name: "favicon-32x32.ico", size: 32 },
+  { id: "fav48", name: "favicon-48x48.ico", size: 48 },
+  { id: "apple", name: "apple-touch-icon.ico", size: 180 },
+  { id: "and192", name: "android-chrome-192x192.ico", size: 192 },
+  { id: "and512", name: "android-chrome-512x512.ico", size: 512 },
 ];
+
+async function canvasToIco(canvas: HTMLCanvasElement): Promise<Blob> {
+  const pngBlob = await new Promise<Blob>((resolve) => canvas.toBlob((b) => resolve(b!), "image/png"));
+  const pngArrayBuffer = await pngBlob.arrayBuffer();
+  const pngData = new Uint8Array(pngArrayBuffer);
+
+  const buffer = new ArrayBuffer(6 + 16 + pngData.length);
+  const view = new DataView(buffer);
+
+  // ICONDIR
+  view.setUint16(0, 0, true); // Reserved
+  view.setUint16(2, 1, true); // Type: 1 (ICO)
+  view.setUint16(4, 1, true); // Count: 1
+
+  // ICONDIRENTRY
+  const width = canvas.width >= 256 ? 0 : canvas.width;
+  const height = canvas.height >= 256 ? 0 : canvas.height;
+  view.setUint8(6, width);
+  view.setUint8(7, height);
+  view.setUint8(8, 0); // Palette
+  view.setUint8(9, 0); // Reserved
+  view.setUint16(10, 1, true); // Planes
+  view.setUint16(12, 32, true); // BPP
+  view.setUint32(14, pngData.length, true); // Size
+  view.setUint32(18, 22, true); // Offset (6 + 16)
+
+  const finalView = new Uint8Array(buffer);
+  finalView.set(pngData, 22);
+
+  return new Blob([finalView], { type: "image/x-icon" });
+}
 
 export function FaviconGenerator() {
   const [image, setImage] = useState<string | null>(null);
@@ -68,9 +100,8 @@ export function FaviconGenerator() {
         ctx.clearRect(0, 0, item.size, item.size);
         ctx.drawImage(img, 0, 0, item.size, item.size);
 
-        const dataUrl = canvas.toDataURL("image/png");
-        const base64Data = dataUrl.split(",")[1];
-        zip.file(item.name, base64Data, { base64: true });
+        const icoBlob = await canvasToIco(canvas);
+        zip.file(item.name, icoBlob);
       }
 
       // Add manifest if selected
@@ -81,7 +112,7 @@ export function FaviconGenerator() {
           icons: SIZES.filter(s => s.size >= 192 && selectedIds.has(s.id)).map(s => ({
             src: `/${s.name}`,
             sizes: `${s.size}x${s.size}`,
-            type: "image/png"
+            type: "image/x-icon"
           })),
           theme_color: "#ffffff",
           background_color: "#ffffff",

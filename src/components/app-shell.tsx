@@ -115,7 +115,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="ml-auto flex items-center gap-1">
             <a
-              href="https://github.com"
+              href="https://github.com/AryaAloni33/Toolshed"
               target="_blank"
               rel="noreferrer"
               className="grid h-9 w-9 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
