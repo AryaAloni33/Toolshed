@@ -47,11 +47,17 @@ function CategoryPage() {
   const list = toolsByCategory(category.id as ToolCategory);
 
   const isDocuments = category.id === "documents";
+  const isWebsite = category.id === "website";
 
   // Document groupings
   const toPdf = list.filter((t) => t.slug.endsWith("-to-pdf"));
   const fromPdf = list.filter((t) => t.slug.startsWith("pdf-to-"));
   const pdfUtils = list.filter((t) => !t.slug.endsWith("-to-pdf") && !t.slug.startsWith("pdf-to-"));
+
+  // Website groupings
+  const frontendTools = list.filter((t) => t.side === "frontend");
+  const backendTools = list.filter((t) => t.side === "backend");
+  const sharedTools = list.filter((t) => t.side === "both" || !t.side);
 
   return (
     <AppShell>
@@ -99,6 +105,39 @@ function CategoryPage() {
               <h2 className="mb-4 font-display text-xl font-semibold">Convert from PDF</h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {fromPdf.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            </section>
+          </div>
+        ) : isWebsite ? (
+          <div className="space-y-10">
+            <section>
+              <h2 className="mb-4 font-display text-xl font-semibold">Frontend Tools</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {frontendTools.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            </section>
+
+            <hr className="border-border" />
+
+            <section>
+              <h2 className="mb-4 font-display text-xl font-semibold">Backend & Data</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {backendTools.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            </section>
+
+            <hr className="border-border" />
+
+            <section>
+              <h2 className="mb-4 font-display text-xl font-semibold">Shared Utilities</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {sharedTools.map((t) => (
                   <ToolCard key={t.slug} tool={t} />
                 ))}
               </div>

@@ -46,6 +46,7 @@ export interface Tool {
   tint: "rust" | "moss" | "clay" | "ink";
   implemented?: boolean;
   acceptsFileType?: string;
+  side?: "frontend" | "backend" | "both";
 }
 
 export const categories: { id: ToolCategory; label: string; blurb: string }[] =
@@ -68,6 +69,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "svg-to-jsx",
@@ -77,6 +79,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "shadow-gen",
@@ -86,6 +89,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "css-clamp",
@@ -95,6 +99,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "ai-palette",
@@ -243,6 +248,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
 
   // Text
@@ -349,6 +355,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "css-to-tailwind",
@@ -358,6 +365,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "json-format",
@@ -367,6 +375,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "both",
   },
   {
     slug: "base64",
@@ -403,6 +412,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "both",
   },
   {
     slug: "diff-checker",
@@ -421,6 +431,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "both",
   },
   {
     slug: "markdown-preview",
@@ -439,6 +450,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "backend",
   },
   {
     slug: "jwt-decoder",
@@ -448,6 +460,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "both",
   },
   {
     slug: "regex-tester",
@@ -484,6 +497,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "moss",
     implemented: true,
+    side: "backend",
   },
 
   // Productivity
@@ -531,6 +545,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "clay",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "unit-converter",
@@ -550,6 +565,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "ink",
     implemented: true,
+    side: "both",
   },
   {
     slug: "sql-format",
@@ -559,6 +575,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "ink",
     implemented: true,
+    side: "backend",
   },
   // Reference
   {
@@ -569,6 +586,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "rust",
     implemented: true,
+    side: "both",
   },
   {
     slug: "cron-explainer",
@@ -578,6 +596,7 @@ export const tools: Tool[] = [
     category: "website",
     tint: "rust",
     implemented: true,
+    side: "backend",
   },
   {
     slug: "git-cheatsheet",
