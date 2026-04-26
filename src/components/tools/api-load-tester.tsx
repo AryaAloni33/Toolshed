@@ -21,16 +21,25 @@ export function ApiLoadTester() {
     const abortControllerRef = useRef<AbortController | null>(null);
 
     const stats = useMemo(() => {
-        if (results.length === 0) return { avg: 0, success: 0, fail: 0, max: 0, min: 0 };
+        if (results.length === 0) return { avg: 0, success: 0, fail: 0, max: 0, min: 0, conclusion: "" };
         const latencies = results.map(r => r.latency);
         const success = results.filter(r => r.success);
+        const avg = Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+        const successRate = (success.length / results.length) * 100;
+
+        let conclusion = "Server is stable and responding well.";
+        if (successRate < 95) conclusion = "Warning: High failure rate detected. Your server may be struggling with this load.";
+        else if (avg > 2000) conclusion = "Notice: High latency detected. The server is responding but slow under pressure.";
+        else if (avg > 500) conclusion = "Moderate latency. The server handles the load but response times are increasing.";
+
         return {
-            avg: Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length),
+            avg,
             success: success.length,
             fail: results.length - success.length,
             max: Math.max(...latencies),
             min: Math.min(...latencies),
-            progress: Math.round((results.length / requests) * 100)
+            progress: Math.round((results.length / requests) * 100),
+            conclusion
         };
     }, [results, requests]);
 
@@ -48,7 +57,7 @@ export function ApiLoadTester() {
         let isStopped = false;
 
         const worker = async () => {
-            while (queue.length > 0 && !isStopped) {
+            while (queue.length > 0 && !isStopped && isRunning) {
                 queue.shift(); // Get next item
 
                 setActiveRequests(prev => prev + 1);
@@ -65,7 +74,7 @@ export function ApiLoadTester() {
                     });
                     const end = performance.now();
 
-                    setResults(prev => [...prev.slice(-49), {
+                    setResults(prev => [...prev, {
                         status: 200, // We assume success if it doesn't throw a network error
                         latency: Math.round(end - start),
                         success: true,
@@ -77,7 +86,7 @@ export function ApiLoadTester() {
                         break;
                     }
                     const end = performance.now();
-                    setResults(prev => [...prev.slice(-49), {
+                    setResults(prev => [...prev, {
                         status: 0,
                         latency: Math.round(end - start),
                         success: false,
@@ -88,7 +97,7 @@ export function ApiLoadTester() {
                 }
 
                 // Small delay to prevent browser thread locking for UI updates
-                await new Promise(r => setTimeout(r, 10));
+                await new Promise(r => setTimeout(r, 5));
             }
         };
 
@@ -121,7 +130,6 @@ export function ApiLoadTester() {
                                     className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border bg-background text-sm outline-none focus:border-foreground/20"
                                 />
                             </div>
-                            <p className="mt-1.5 text-[10px] text-muted-foreground italic">Note: Browser requests are subject to CORS. We use 'no-cors' to ensure the hit reaches the server.</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -145,11 +153,7 @@ export function ApiLoadTester() {
                             </div>
                         </div>
 
-                        <div className="pt-2 text-[10px] text-muted-foreground bg-muted/30 p-2.5 rounded border border-border/50 leading-normal">
-                            <strong>Warning:</strong> High bot counts (20+) may cause browser lag. Use responsibly on systems you own.
-                        </div>
-
-                        <div className="pt-2">
+                        <div className="flex flex-col gap-2">
                             {!isRunning ? (
                                 <PrimaryButton onClick={runTest} className="w-full py-6">
                                     <Play className="h-4 w-4" />
@@ -161,6 +165,7 @@ export function ApiLoadTester() {
                                     Emergency Stop
                                 </PrimaryButton>
                             )}
+                            <p className="text-[10px] text-center text-muted-foreground italic">Use responsibly for performance diagnostics.</p>
                         </div>
                     </div>
 
@@ -168,13 +173,13 @@ export function ApiLoadTester() {
                         <div className="mb-4 p-3 rounded-full bg-background border border-border">
                             <Activity className={cn("h-8 w-8", isRunning ? "text-moss animate-pulse" : "text-muted-foreground")} />
                         </div>
-                        <h3 className="font-display text-2xl font-semibold">{isRunning ? stats.progress + "%" : "Ready"}</h3>
-                        <p className="text-sm text-muted-foreground">{isRunning ? "Test in progress..." : "No active test"}</p>
+                        <h3 className="font-display text-2xl font-semibold">{isRunning ? stats.progress + "%" : results.length > 0 ? "100%" : "Ready"}</h3>
+                        <p className="text-sm text-muted-foreground">{isRunning ? "Test in progress..." : results.length > 0 ? "Test Finished" : "No active test"}</p>
 
                         <div className="mt-6 w-full bg-border rounded-full h-1.5 overflow-hidden">
                             <div
                                 className="bg-foreground h-full transition-all duration-300"
-                                style={{ width: `${isRunning ? stats.progress : 0}%` }}
+                                style={{ width: `${isRunning ? stats.progress : results.length > 0 ? 100 : 0}%` }}
                             />
                         </div>
                     </div>
@@ -183,7 +188,7 @@ export function ApiLoadTester() {
 
             {(results.length > 0 || isRunning) && (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <ToolPanel className="flex flex-col gap-1 items-center justify-center p-6">
+                    <ToolPanel className="flex flex-col gap-1 items-center justify-center p-6 bg-card border-border">
                         <FieldLabel className="mb-0">Avg Latency</FieldLabel>
                         <div className="text-2xl font-mono flex items-center gap-2">
                             <Clock className="h-4 w-4 opacity-40" />
@@ -213,11 +218,27 @@ export function ApiLoadTester() {
                 </div>
             )}
 
+            {!isRunning && results.length > 0 && (
+                <ToolPanel className="bg-moss/5 border-moss/20">
+                    <div className="flex items-start gap-4">
+                        <div className="mt-1 p-2 rounded-full bg-moss/20">
+                            <Zap className="h-5 w-5 text-moss" />
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-semibold text-moss-foreground">Performance Conclusion</h4>
+                            <p className="mt-1 text-sm text-moss-foreground/80 leading-relaxed">
+                                {stats.conclusion}
+                            </p>
+                        </div>
+                    </div>
+                </ToolPanel>
+            )}
+
             {results.length > 0 && (
                 <ToolPanel>
-                    <FieldLabel>Real-time Response Stream</FieldLabel>
+                    <FieldLabel>Live Stream (Last 50 requests)</FieldLabel>
                     <div className="mt-4 flex flex-wrap gap-2">
-                        {results.map((r, i) => (
+                        {results.slice(-50).map((r, i) => (
                             <div
                                 key={i}
                                 className={cn(
