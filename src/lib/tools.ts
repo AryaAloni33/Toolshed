@@ -62,6 +62,16 @@ export const categories: { id: ToolCategory; label: string; blurb: string }[] =
 
 export const tools: Tool[] = [
   {
+    slug: "api-load-tester",
+    name: "API Load Tester",
+    description: "Stress test your endpoints to ensure they can handle high traffic volumes.",
+    icon: Activity,
+    category: "website",
+    tint: "rust",
+    implemented: true,
+    side: "backend",
+  },
+  {
     slug: "title-suggester",
     name: "AI Title Suggester",
     description: "Generate catchy and relevant titles for your projects with AI.",

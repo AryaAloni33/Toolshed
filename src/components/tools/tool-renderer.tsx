@@ -59,6 +59,7 @@ import { CssClampGenerator } from "./css-clamp-generator";
 import { AiColorScout } from "./ai-color-scout";
 import { AspectRatioCalculator } from "./aspect-ratio-calculator";
 import { TitleSuggester } from "./title-suggester";
+import { ApiLoadTester } from "./api-load-tester";
 
 export function ToolRenderer({ slug }: { slug: string }) {
   switch (slug) {
@@ -152,6 +153,7 @@ export function ToolRenderer({ slug }: { slug: string }) {
     case "ai-palette": return <AiColorScout />;
     case "aspect-ratio": return <AspectRatioCalculator />;
     case "title-suggester": return <TitleSuggester />;
+    case "api-load-tester": return <ApiLoadTester />;
     default: return null;
   }
 }
