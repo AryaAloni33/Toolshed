@@ -106,9 +106,10 @@ export const tools: Tool[] = [
     name: "AI Color Scout",
     description: "Generate professional color palettes from a mood or description.",
     icon: Palette,
-    category: "ai",
-    tint: "rust",
+    category: "website",
+    tint: "moss",
     implemented: true,
+    side: "frontend",
   },
   {
     slug: "aspect-ratio",

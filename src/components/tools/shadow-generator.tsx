@@ -99,10 +99,10 @@ export function ShadowGenerator() {
 
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-muted/20 p-12 min-h-[400px]">
                     <div
-                        className="w-48 h-48 rounded-3xl bg-card border border-border flex items-center justify-center transition-all duration-300"
+                        className="w-48 h-48 rounded-3xl bg-white border border-border flex items-center justify-center transition-all duration-300"
                         style={{ boxShadow: shadowString }}
                     >
-                        <Layers className="h-10 w-10 text-muted-foreground" strokeWidth={1} />
+                        <Layers className="h-10 w-10 text-slate-400" strokeWidth={1} />
                     </div>
                     <p className="mt-12 text-sm text-muted-foreground">Preview of layered shadow effect</p>
                 </div>

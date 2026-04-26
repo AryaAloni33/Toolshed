@@ -25,30 +25,39 @@ export function ImagePalette() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+      // Scale down image for processing performance and better color grouping
+      const scale = Math.min(1, 200 / Math.max(img.width, img.height));
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      const imageData = ctx.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height,
-      ).data;
-      const colorCounts: { [key: string]: number } = {};
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      const colorCounts: Record<string, number> = {};
 
-      // Sample every 10th pixel for performance
-      for (let i = 0; i < imageData.length; i += 40) {
+      for (let i = 0; i < imageData.length; i += 4) {
         const r = imageData[i];
         const g = imageData[i + 1];
         const b = imageData[i + 2];
-        const hex = rgbToHex(r, g, b);
+        const a = imageData[i + 3];
+
+        if (a < 128) continue; // Skip transparent pixels
+
+        // Quantize colors to group similar ones (round to nearest 16)
+        const qr = Math.round(r / 16) * 16;
+        const qg = Math.round(g / 16) * 16;
+        const qb = Math.round(b / 16) * 16;
+
+        const hex = rgbToHex(
+          Math.min(255, qr),
+          Math.min(255, qg),
+          Math.min(255, qb)
+        );
         colorCounts[hex] = (colorCounts[hex] || 0) + 1;
       }
 
       const sortedColors = Object.entries(colorCounts)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 10)
+        .slice(0, 8) // Limit to 8 most dominant colors for a cleaner palette
         .map((entry) => entry[0]);
 
       setColors(sortedColors);
