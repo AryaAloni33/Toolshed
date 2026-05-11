@@ -30,24 +30,22 @@ export function AiSystemPromptBuilder() {
             messages: [
               {
                 role: "system",
-                content: `You are an expert Prompt Engineer specializing in creating high-quality system prompts for LLMs. 
-                Your task is to take a simple prompt or idea from the user and expand it into a comprehensive, professional system prompt.
+                content: `You are a master Prompt Engineer. Your task is to transform a simple user idea into a hyper-specific, production-ready system prompt.
                 
-                The generated system prompt should include:
-                1. **Role & Identity**: Clearly define who the AI is.
-                2. **Context & Objective**: Explain the goal and the environment.
-                3. **Core Responsibilities**: List specific tasks.
-                4. **Constraints & Tone**: Specify what to avoid and the style of communication (e.g., professional, concise, empathetic).
-                5. **Formatting Rules**: How the output should be structured (Markdown, JSON, etc.).
+                Guidelines:
+                - Use a structured, tag-based or bulleted format (e.g., <identity>, <context>, <guidelines>, <output_format>).
+                - Avoid generic filler text or "useless" information. 
+                - Be extremely precise about the AI's role, constraints, and specific behaviors.
+                - Focus on "what to do" and "how to behave" rather than long-winded introductions.
                 
-                Return ONLY the final system prompt text. Do not include any introductory or concluding remarks like "Here is your prompt" or "Let me know if you need anything else".`,
+                Return ONLY the final system prompt text without any conversational prefix or suffix.`,
               },
               {
                 role: "user",
                 content: `Build a detailed system prompt for: ${prompt}`,
               },
             ],
-            temperature: 0.7,
+            temperature: 0.3,
             max_tokens: 2048,
           }),
         },

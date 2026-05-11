@@ -29,7 +29,6 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 export type ToolCategory =
-  | "documents"
   | "images"
   | "text"
   | "ai"
@@ -51,7 +50,6 @@ export interface Tool {
 
 export const categories: { id: ToolCategory; label: string; blurb: string }[] =
   [
-    { id: "documents", label: "Documents", blurb: "PDFs, Word, Excel" },
     { id: "images", label: "Images", blurb: "Resize, convert, clean" },
     { id: "text", label: "Text", blurb: "Edit, count, transform" },
     { id: "ai", label: "AI", blurb: "Summarize, extract" },
@@ -148,80 +146,6 @@ export const tools: Tool[] = [
     icon: Crop,
     category: "images",
     tint: "moss",
-    implemented: true,
-  },
-  // Documents
-  {
-    slug: "merge-pdf",
-    name: "Merge PDF",
-    description: "Combine PDFs in the order you want.",
-    icon: Combine,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-    acceptsFileType: "application/pdf",
-  },
-  {
-    slug: "split-pdf",
-    name: "Split PDF",
-    description: "Pull pages out of a PDF into new files.",
-    icon: Scissors,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-  },
-  {
-    slug: "compress-pdf",
-    name: "Compress PDF",
-    description: "Reduce file size while keeping quality.",
-    icon: Minimize2,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-  },
-  {
-    slug: "pdf-to-image",
-    name: "PDF → Image",
-    description: "Convert each page to JPG or PNG.",
-    icon: FileImage,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-  },
-  {
-    slug: "word-to-pdf",
-    name: "Word → PDF",
-    description: "Export .docx to a clean PDF.",
-    icon: FileType2,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-  },
-  {
-    slug: "excel-to-pdf",
-    name: "Excel → PDF",
-    description: "Render spreadsheets as PDFs.",
-    icon: FileText,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-  },
-  {
-    slug: "pdf-to-word",
-    name: "PDF → Word",
-    description: "Convert PDFs back to .docx.",
-    icon: FileType2,
-    category: "documents",
-    tint: "rust",
-    implemented: true,
-  },
-  {
-    slug: "pdf-to-excel",
-    name: "PDF → Excel",
-    description: "Extract tables into spreadsheets.",
-    icon: FileText,
-    category: "documents",
-    tint: "rust",
     implemented: true,
   },
 

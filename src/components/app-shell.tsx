@@ -26,7 +26,6 @@ import { cn } from "@/lib/utils";
 const nav = [
   { to: "/", label: "Overview", icon: LayoutGrid },
   { to: "/browse", label: "All Tools", icon: Search },
-  { to: "/c/$category", params: { category: "documents" }, label: "Documents", icon: FileText },
   { to: "/c/$category", params: { category: "images" }, label: "Images", icon: ImageIcon },
   { to: "/c/$category", params: { category: "text" }, label: "Text", icon: Type },
   { to: "/c/$category", params: { category: "ai" }, label: "AI", icon: Brain },
