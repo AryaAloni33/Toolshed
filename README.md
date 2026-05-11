@@ -10,10 +10,6 @@ Toolshed is a premium, focused workspace featuring a collection of **40+ essenti
 - **AI OCR**: Extract text from images and scans with high precision using Llama 3.2 Vision.
 - **Content Extractor**: Pull key entities, themes, and structured data from any text.
 
-### 📄 Document Processing
-- **PDF Suite**: Merge, Split, and Compress PDF files.
-- **Conversions**: Word to PDF, Excel to PDF, and PDF to Image.
-
 ### 🖼️ Image Editing
 - **Optimization**: Resize and compress images without losing quality.
 - **Cleanup**: Remove backgrounds using on-device AI.
