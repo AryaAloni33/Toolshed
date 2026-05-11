@@ -24,7 +24,7 @@ import {
   Link2,
   KeyRound,
   StickyNote, Clipboard, ListChecks, QrCode, Columns, Clock,
-  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch, GitCommit, Wind, Code2, Layers
+  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch, GitCommit, Wind, Code2, Layers, PlayCircle, Wand2
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -112,10 +112,30 @@ export const tools: Tool[] = [
     side: "frontend",
   },
   {
+    slug: "glassmorphism-gen",
+    name: "Glassmorphism Generator",
+    description: "Create stunning frosted-glass effects with backdrop filters.",
+    icon: Layers,
+    category: "website",
+    tint: "moss",
+    implemented: true,
+    side: "frontend",
+  },
+  {
     slug: "ai-palette",
     name: "AI Color Scout",
     description: "Generate professional color palettes from a mood or description.",
     icon: Palette,
+    category: "website",
+    tint: "moss",
+    implemented: true,
+    side: "frontend",
+  },
+  {
+    slug: "animation-visualizer",
+    name: "Animation Visualizer",
+    description: "Design and preview smooth CSS animations with real-time controls.",
+    icon: PlayCircle,
     category: "website",
     tint: "moss",
     implemented: true,
@@ -348,10 +368,28 @@ export const tools: Tool[] = [
     implemented: true,
   },
   {
+    slug: "ai-sql-gen",
+    name: "AI SQL Generator",
+    description: "Generate complex SQL queries from natural language descriptions.",
+    icon: Wand2,
+    category: "ai",
+    tint: "rust",
+    implemented: true,
+  },
+  {
     slug: "ai-commit-gen",
     name: "Commit Generator",
     description: "Turn your git diff into a professional commit message.",
     icon: GitCommit,
+    category: "ai",
+    tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "ai-prompt-builder",
+    name: "System Prompt Builder",
+    description: "Transform simple ideas into highly detailed, professional AI system prompts.",
+    icon: Sparkles,
     category: "ai",
     tint: "rust",
     implemented: true,

@@ -57,16 +57,17 @@ export function ApiLoadTester() {
         let isStopped = false;
 
         const worker = async () => {
-            while (queue.length > 0 && !isStopped && isRunning) {
-                queue.shift(); // Get next item
+            while (!isStopped && !abortControllerRef.current?.signal.aborted) {
+                const next = queue.shift();
+                if (next === undefined) break;
 
                 setActiveRequests(prev => prev + 1);
                 const start = performance.now();
 
                 try {
-                    // Using 'no-cors' mode ensures the request still hits the server
-                    // even if Cross-Origin headers aren't set, which is common during stress tests.
-                    await fetch(url, {
+                    // Using 'no-cors' mode allows the request to be sent even if CORS isn't configured,
+                    // but it means we can't see the actual status code (it returns 0 or 200/opaque).
+                    const response = await fetch(url, {
                         method: "GET",
                         signal: abortControllerRef.current?.signal,
                         mode: "no-cors",
@@ -75,13 +76,13 @@ export function ApiLoadTester() {
                     const end = performance.now();
 
                     setResults(prev => [...prev, {
-                        status: 200, // We assume success if it doesn't throw a network error
+                        status: response.type === 'opaque' ? 200 : response.status,
                         latency: Math.round(end - start),
                         success: true,
                         timestamp: Date.now()
                     }]);
                 } catch (err: any) {
-                    if (err.name === "AbortError") {
+                    if (err.name === "AbortError" || abortControllerRef.current?.signal.aborted) {
                         isStopped = true;
                         break;
                     }
@@ -96,15 +97,15 @@ export function ApiLoadTester() {
                     setActiveRequests(prev => prev - 1);
                 }
 
-                // Small delay to prevent browser thread locking for UI updates
-                await new Promise(r => setTimeout(r, 5));
+                // Small delay to prevent browser thread locking
+                await new Promise(r => setTimeout(r, 2));
             }
         };
 
         const workerThreads = Array.from({ length: Math.min(concurrency, requests) }).map(worker);
         await Promise.all(workerThreads);
         setIsRunning(false);
-        if (!isStopped) toast.success("Load test completed!");
+        if (!isStopped && !abortControllerRef.current?.signal.aborted) toast.success("Load test completed!");
     };
 
     const stopTest = () => {
@@ -235,29 +236,72 @@ export function ApiLoadTester() {
             )}
 
             {results.length > 0 && (
-                <ToolPanel>
-                    <FieldLabel>Live Stream (Last 50 requests)</FieldLabel>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                        {results.slice(-50).map((r, i) => (
-                            <div
-                                key={i}
-                                className={cn(
-                                    "h-6 min-w-[40px] px-2 rounded flex items-center justify-center text-[10px] font-mono",
-                                    r.success ? "bg-moss/10 text-moss border border-moss/20" : "bg-rust/10 text-rust border border-rust/20"
-                                )}
-                                title={`Latency: ${r.latency}ms`}
-                            >
-                                {r.latency}ms
-                            </div>
-                        ))}
-                        {isRunning && (
-                            <div className="flex items-center gap-2 px-3 h-6 rounded bg-background border border-border animate-pulse">
-                                <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                                <span className="text-[10px] font-mono uppercase">Batch Processing</span>
-                            </div>
-                        )}
-                    </div>
-                </ToolPanel>
+                <div className="space-y-4">
+                    <ToolPanel>
+                        <div className="flex items-center justify-between mb-4">
+                            <FieldLabel className="mb-0">Performance Report</FieldLabel>
+                            <GhostButton onClick={() => {
+                                const report = `API Load Test Report\nURL: ${url}\nTotal Requests: ${results.length}\nAvg Latency: ${stats.avg}ms\nSuccess Rate: ${((stats.success / results.length) * 100).toFixed(1)}%\nMax Spike: ${stats.max}ms\nConclusion: ${stats.conclusion}`;
+                                navigator.clipboard.writeText(report);
+                                toast.success("Report copied!");
+                            }}>
+                                <Copy className="h-3.5 w-3.5" />
+                                Copy Report
+                            </GhostButton>
+                        </div>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                           <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border">
+                               <p className="font-semibold text-foreground mb-1">Latency Distribution</p>
+                               <div className="space-y-1">
+                                   <div className="flex justify-between">
+                                       <span>&lt; 100ms</span>
+                                       <span className="font-mono">{results.filter(r => r.latency < 100).length}</span>
+                                   </div>
+                                   <div className="flex justify-between">
+                                       <span>100-500ms</span>
+                                       <span className="font-mono">{results.filter(r => r.latency >= 100 && r.latency < 500).length}</span>
+                                   </div>
+                                   <div className="flex justify-between">
+                                       <span>&gt; 500ms</span>
+                                       <span className="font-mono">{results.filter(r => r.latency >= 500).length}</span>
+                                   </div>
+                               </div>
+                           </div>
+                           <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border">
+                               <p className="font-semibold text-foreground mb-1">Stability Analysis</p>
+                               <p className="text-xs leading-relaxed">
+                                   {stats.fail > 0 
+                                     ? `Detected ${stats.fail} network failures. This could be due to CORS restrictions, rate limiting, or server instability.`
+                                     : "No network errors detected. The server endpoint appears to be reachable and accepting requests."}
+                               </p>
+                           </div>
+                        </div>
+                    </ToolPanel>
+
+                    <ToolPanel>
+                        <FieldLabel>Live Stream (Last 50 requests)</FieldLabel>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            {results.slice(-50).map((r, i) => (
+                                <div
+                                    key={i}
+                                    className={cn(
+                                        "h-6 min-w-[40px] px-2 rounded flex items-center justify-center text-[10px] font-mono",
+                                        r.success ? "bg-moss/10 text-moss border border-moss/20" : "bg-rust/10 text-rust border border-rust/20"
+                                    )}
+                                    title={`Latency: ${r.latency}ms`}
+                                >
+                                    {r.latency}ms
+                                </div>
+                            ))}
+                            {isRunning && (
+                                <div className="flex items-center gap-2 px-3 h-6 rounded bg-background border border-border animate-pulse">
+                                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                                    <span className="text-[10px] font-mono uppercase">Batch Processing</span>
+                                </div>
+                            )}
+                        </div>
+                    </ToolPanel>
+                </div>
             )}
         </div>
     );

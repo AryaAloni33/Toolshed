@@ -1,159 +1,92 @@
-import { JsonFormatter } from "./json-formatter";
-import { Base64Tool } from "./base64";
-import { UrlEncoder } from "./url-encoder";
-import { UuidGenerator } from "./uuid-generator";
-import { CaseConverter } from "./case-converter";
-import { WordCounter } from "./word-counter";
-import { TextCleanup } from "./text-cleanup";
-import { ImageResize } from "./image-resize";
-import { ImageCompress } from "./image-compress";
-import { ImageConvert } from "./image-convert";
-import { Notes } from "./notes";
-import { Todo } from "./todo";
-import { ClipboardHistory } from "./clipboard-history";
-import { AiSummarizer } from "./ai-summarizer";
-import { AiOcr } from "./ai-ocr";
-import { ContentExtractor } from "./content-extractor";
-import { PdfMerge } from "./pdf-merge";
-import { PdfSplit } from "./pdf-split";
-import { PdfCompress } from "./pdf-compress";
-import { ZipTool } from "./zip-tool";
-import { UnzipTool } from "./unzip-tool";
-import { PdfToImage } from "./pdf-to-image";
-import { ImagePalette } from "./image-palette";
-import { TextSummarizer } from "./text-summarizer";
-import { RemoveBackground } from "./remove-background";
-import { QrGenerator } from "./qr-generator";
-import { PasswordGenerator } from "./password-generator";
-import { DiffChecker } from "./diff-checker";
-import { UnixTimestamp } from "./unix-timestamp";
-import { LoremIpsum } from "./lorem-ipsum";
-import { MarkdownPreview } from "./markdown-preview";
-import { UnitConverter } from "./unit-converter";
-import { HashGenerator } from "./hash-generator";
-import { JwtDecoder } from "./jwt-decoder";
-import { CsvJsonConverter } from "./csv-json-converter";
-import { SqlFormatter } from "./sql-formatter";
-import { PercentageCalculator } from "./percentage-calculator";
-import { HttpStatusCodes } from "./http-status-codes";
-import { RegexTester } from "./regex-tester";
-import { Base64ImageEncoder } from "./base64-image-encoder";
-import { WordToPdf } from "./word-to-pdf";
-import { ExcelToPdf } from "./excel-to-pdf";
-import { PdfToWord } from "./pdf-to-word";
-import { PdfToExcel } from "./pdf-to-excel";
-import { CronExplainer } from "./cron-explainer";
-import { GitCheatsheet } from "./git-cheatsheet";
-import { ColorConverter } from "./color-converter";
-import { BcryptGenerator } from "./bcrypt-generator";
-import { TextToLatex } from "./text-to-latex";
-import { ApiClient } from "./api-client";
-import { AiRegexExplainer } from "./ai-regex-explainer";
-import { AiCommitGenerator } from "./ai-commit-generator";
-import { HtmlToJsx } from "./html-to-jsx";
-import { CssToTailwind } from "./css-to-tailwind";
-import { FaviconGenerator } from "./favicon-generator";
-import { SvgToJsx } from "./svg-to-jsx";
-import { ShadowGenerator } from "./shadow-generator";
-import { CssClampGenerator } from "./css-clamp-generator";
-import { AiColorScout } from "./ai-color-scout";
-import { AspectRatioCalculator } from "./aspect-ratio-calculator";
-import { TitleSuggester } from "./title-suggester";
-import { ApiLoadTester } from "./api-load-tester";
+import { lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
+
+// Use a map for cleaner lazy loading
+const toolsMap: Record<string, any> = {
+  "json-format": lazy(() => import("./json-formatter").then(m => ({ default: m.JsonFormatter }))),
+  "base64": lazy(() => import("./base64").then(m => ({ default: m.Base64Tool }))),
+  "url-encode": lazy(() => import("./url-encoder").then(m => ({ default: m.UrlEncoder }))),
+  "uuid": lazy(() => import("./uuid-generator").then(m => ({ default: m.UuidGenerator }))),
+  "case-converter": lazy(() => import("./case-converter").then(m => ({ default: m.CaseConverter }))),
+  "word-counter": lazy(() => import("./word-counter").then(m => ({ default: m.WordCounter }))),
+  "text-cleanup": lazy(() => import("./text-cleanup").then(m => ({ default: m.TextCleanup }))),
+  "image-resize": lazy(() => import("./image-resize").then(m => ({ default: m.ImageResize }))),
+  "image-compress": lazy(() => import("./image-compress").then(m => ({ default: m.ImageCompress }))),
+  "image-convert": lazy(() => import("./image-convert").then(m => ({ default: m.ImageConvert }))),
+  "notes": lazy(() => import("./notes").then(m => ({ default: m.Notes }))),
+  "todo": lazy(() => import("./todo").then(m => ({ default: m.Todo }))),
+  "clipboard": lazy(() => import("./clipboard-history").then(m => ({ default: m.ClipboardHistory }))),
+  "ai-summarize": lazy(() => import("./ai-summarizer").then(m => ({ default: m.AiSummarizer }))),
+  "ocr": lazy(() => import("./ai-ocr").then(m => ({ default: m.AiOcr }))),
+  "extract-content": lazy(() => import("./content-extractor").then(m => ({ default: m.ContentExtractor }))),
+  "merge-pdf": lazy(() => import("./pdf-merge").then(m => ({ default: m.PdfMerge }))),
+  "split-pdf": lazy(() => import("./pdf-split").then(m => ({ default: m.PdfSplit }))),
+  "compress-pdf": lazy(() => import("./pdf-compress").then(m => ({ default: m.PdfCompress }))),
+  "zip-files": lazy(() => import("./zip-tool").then(m => ({ default: m.ZipTool }))),
+  "unzip": lazy(() => import("./unzip-tool").then(m => ({ default: m.UnzipTool }))),
+  "pdf-to-image": lazy(() => import("./pdf-to-image").then(m => ({ default: m.PdfToImage }))),
+  "image-palette": lazy(() => import("./image-palette").then(m => ({ default: m.ImagePalette }))),
+  "summarizer": lazy(() => import("./text-summarizer").then(m => ({ default: m.TextSummarizer }))),
+  "remove-background": lazy(() => import("./remove-background").then(m => ({ default: m.RemoveBackground }))),
+  "qr-generator": lazy(() => import("./qr-generator").then(m => ({ default: m.QrGenerator }))),
+  "password-gen": lazy(() => import("./password-generator").then(m => ({ default: m.PasswordGenerator }))),
+  "diff-checker": lazy(() => import("./diff-checker").then(m => ({ default: m.DiffChecker }))),
+  "unix-timestamp": lazy(() => import("./unix-timestamp").then(m => ({ default: m.UnixTimestamp }))),
+  "lorem-ipsum": lazy(() => import("./lorem-ipsum").then(m => ({ default: m.LoremIpsum }))),
+  "markdown-preview": lazy(() => import("./markdown-preview").then(m => ({ default: m.MarkdownPreview }))),
+  "unit-converter": lazy(() => import("./unit-converter").then(m => ({ default: m.UnitConverter }))),
+  "hash-generator": lazy(() => import("./hash-generator").then(m => ({ default: m.HashGenerator }))),
+  "jwt-decoder": lazy(() => import("./jwt-decoder").then(m => ({ default: m.JwtDecoder }))),
+  "csv-json": lazy(() => import("./csv-json-converter").then(m => ({ default: m.CsvJsonConverter }))),
+  "sql-format": lazy(() => import("./sql-formatter").then(m => ({ default: m.SqlFormatter }))),
+  "percentage-calc": lazy(() => import("./percentage-calculator").then(m => ({ default: m.PercentageCalculator }))),
+  "http-codes": lazy(() => import("./http-status-codes").then(m => ({ default: m.HttpStatusCodes }))),
+  "regex-tester": lazy(() => import("./regex-tester").then(m => ({ default: m.RegexTester }))),
+  "base64-image": lazy(() => import("./base64-image-encoder").then(m => ({ default: m.Base64ImageEncoder }))),
+  "word-to-pdf": lazy(() => import("./word-to-pdf").then(m => ({ default: m.WordToPdf }))),
+  "excel-to-pdf": lazy(() => import("./excel-to-pdf").then(m => ({ default: m.ExcelToPdf }))),
+  "pdf-to-word": lazy(() => import("./pdf-to-word").then(m => ({ default: m.PdfToWord }))),
+  "pdf-to-excel": lazy(() => import("./pdf-to-excel").then(m => ({ default: m.PdfToExcel }))),
+  "cron-explainer": lazy(() => import("./cron-explainer").then(m => ({ default: m.CronExplainer }))),
+  "git-cheatsheet": lazy(() => import("./git-cheatsheet").then(m => ({ default: m.GitCheatsheet }))),
+  "color-converter": lazy(() => import("./color-converter").then(m => ({ default: m.ColorConverter }))),
+  "bcrypt-generator": lazy(() => import("./bcrypt-generator").then(m => ({ default: m.BcryptGenerator }))),
+  "text-to-latex": lazy(() => import("./text-to-latex").then(m => ({ default: m.TextToLatex }))),
+  "api-client": lazy(() => import("./api-client").then(m => ({ default: m.ApiClient }))),
+  "ai-regex-explainer": lazy(() => import("./ai-regex-explainer").then(m => ({ default: m.AiRegexExplainer }))),
+  "ai-commit-gen": lazy(() => import("./ai-commit-generator").then(m => ({ default: m.AiCommitGenerator }))),
+  "html-to-jsx": lazy(() => import("./html-to-jsx").then(m => ({ default: m.HtmlToJsx }))),
+  "css-to-tailwind": lazy(() => import("./css-to-tailwind").then(m => ({ default: m.CssToTailwind }))),
+  "favicon-gen": lazy(() => import("./favicon-generator").then(m => ({ default: m.FaviconGenerator }))),
+  "svg-to-jsx": lazy(() => import("./svg-to-jsx").then(m => ({ default: m.SvgToJsx }))),
+  "shadow-gen": lazy(() => import("./shadow-generator").then(m => ({ default: m.ShadowGenerator }))),
+  "css-clamp": lazy(() => import("./css-clamp-generator").then(m => ({ default: m.CssClampGenerator }))),
+  "ai-palette": lazy(() => import("./ai-color-scout").then(m => ({ default: m.AiColorScout }))),
+  "aspect-ratio": lazy(() => import("./aspect-ratio-calculator").then(m => ({ default: m.AspectRatioCalculator }))),
+  "title-suggester": lazy(() => import("./title-suggester").then(m => ({ default: m.TitleSuggester }))),
+  "api-load-tester": lazy(() => import("./api-load-tester").then(m => ({ default: m.ApiLoadTester }))),
+  "animation-visualizer": lazy(() => import("./animation-visualizer").then(m => ({ default: m.AnimationVisualizer }))),
+  "ai-sql-gen": lazy(() => import("./ai-sql-generator").then(m => ({ default: m.AiSqlGenerator }))),
+  "ai-prompt-builder": lazy(() => import("./ai-system-prompt-builder").then(m => ({ default: m.AiSystemPromptBuilder }))),
+  "glassmorphism-gen": lazy(() => import("./glassmorphism-generator").then(m => ({ default: m.GlassmorphismGenerator }))),
+};
 
 export function ToolRenderer({ slug }: { slug: string }) {
-  switch (slug) {
-    case "json-format":
-      return <JsonFormatter />;
-    case "base64":
-      return <Base64Tool />;
-    case "url-encode":
-      return <UrlEncoder />;
-    case "uuid":
-      return <UuidGenerator />;
-    case "case-converter":
-      return <CaseConverter />;
-    case "word-counter":
-      return <WordCounter />;
-    case "text-cleanup":
-      return <TextCleanup />;
-    case "image-resize":
-      return <ImageResize />;
-    case "image-compress":
-      return <ImageCompress />;
-    case "image-convert":
-      return <ImageConvert />;
-    case "notes":
-      return <Notes />;
-    case "todo":
-      return <Todo />;
-    case "clipboard":
-      return <ClipboardHistory />;
-    case "ai-summarize":
-      return <AiSummarizer />;
-    case "ocr":
-      return <AiOcr />;
-    case "extract-content":
-      return <ContentExtractor />;
-    case "merge-pdf":
-      return <PdfMerge />;
-    case "split-pdf":
-      return <PdfSplit />;
-    case "compress-pdf":
-      return <PdfCompress />;
-    case "zip-files":
-      return <ZipTool />;
-    case "unzip":
-      return <UnzipTool />;
-    case "pdf-to-image":
-      return <PdfToImage />;
-    case "image-palette":
-      return <ImagePalette />;
-    case "summarizer":
-      return <TextSummarizer />;
-    case "remove-background":
-      return <RemoveBackground />;
-    case "qr-generator":
-      return <QrGenerator />;
-    case "password-gen":
-      return <PasswordGenerator />;
-    case "diff-checker":
-      return <DiffChecker />;
-    case "unix-timestamp":
-      return <UnixTimestamp />;
-    case "lorem-ipsum": return <LoremIpsum />;
-    case "markdown-preview": return <MarkdownPreview />;
-    case "unit-converter": return <UnitConverter />;
-    case "hash-generator": return <HashGenerator />;
-    case "jwt-decoder": return <JwtDecoder />;
-    case "csv-json": return <CsvJsonConverter />;
-    case "sql-format": return <SqlFormatter />;
-    case "percentage-calc": return <PercentageCalculator />;
-    case "http-codes": return <HttpStatusCodes />;
-    case "regex-tester": return <RegexTester />;
-    case "base64-image": return <Base64ImageEncoder />;
-    case "word-to-pdf": return <WordToPdf />;
-    case "excel-to-pdf": return <ExcelToPdf />;
-    case "pdf-to-word": return <PdfToWord />;
-    case "pdf-to-excel": return <PdfToExcel />;
-    case "cron-explainer": return <CronExplainer />;
-    case "git-cheatsheet": return <GitCheatsheet />;
-    case "color-converter": return <ColorConverter />;
-    case "bcrypt-generator": return <BcryptGenerator />;
-    case "text-to-latex": return <TextToLatex />;
-    case "api-client": return <ApiClient />;
-    case "ai-regex-explainer": return <AiRegexExplainer />;
-    case "ai-commit-gen": return <AiCommitGenerator />;
-    case "html-to-jsx": return <HtmlToJsx />;
-    case "css-to-tailwind": return <CssToTailwind />;
-    case "favicon-gen": return <FaviconGenerator />;
-    case "svg-to-jsx": return <SvgToJsx />;
-    case "shadow-gen": return <ShadowGenerator />;
-    case "css-clamp": return <CssClampGenerator />;
-    case "ai-palette": return <AiColorScout />;
-    case "aspect-ratio": return <AspectRatioCalculator />;
-    case "title-suggester": return <TitleSuggester />;
-    case "api-load-tester": return <ApiLoadTester />;
-    default: return null;
-  }
+  const Component = toolsMap[slug];
+
+  if (!Component) return null;
+
+  return (
+    <Suspense
+      fallback={
+        <div className=\"flex h-[400px] w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-card/50\">
+          <Loader2 className=\"h-8 w-8 animate-spin text-muted-foreground/40\" strokeWidth={1.5} />
+          <p className=\"text-sm text-muted-foreground/60 font-medium\">Preparing your tool...</p>
+        </div>
+      }
+    >
+      <Component />
+    </Suspense>
+  );
 }
+
