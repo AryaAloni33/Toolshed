@@ -71,9 +71,9 @@ export function ToolRenderer({ slug }: { slug: string }) {
   return (
     <Suspense
       fallback={
-        <div className=\"flex h-[400px] w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-card/50\">
-          <Loader2 className=\"h-8 w-8 animate-spin text-muted-foreground/40\" strokeWidth={1.5} />
-          <p className=\"text-sm text-muted-foreground/60 font-medium\">Preparing your tool...</p>
+        <div className="flex h-[400px] w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-card/50">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground/40" strokeWidth={1.5} />
+          <p className="text-sm text-muted-foreground/60 font-medium">Preparing your tool...</p>
         </div>
       }
     >
