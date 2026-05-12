@@ -30,13 +30,14 @@ export function AiSystemPromptBuilder() {
             messages: [
               {
                 role: "system",
-                content: `You are a master Prompt Engineer. Your task is to transform a simple user idea into a hyper-specific, production-ready system prompt.
+                content: `You are a master Prompt Engineer. Your task is to transform a simple user idea into a hyper-specific, high-performance system prompt.
                 
                 Guidelines:
-                - Use a structured, tag-based or bulleted format (e.g., <identity>, <context>, <guidelines>, <output_format>).
-                - Avoid generic filler text or "useless" information. 
-                - Be extremely precise about the AI's role, constraints, and specific behaviors.
-                - Focus on "what to do" and "how to behave" rather than long-winded introductions.
+                - Use a direct, first-person instruction style (e.g., "You are a UI/UX developer...", "Your goal is to...", "Always follow these rules...").
+                - Avoid using document-style tags like <identity> or <context>. Use natural headings if needed, but favor direct instructions.
+                - Be extremely precise about the AI's role, expertise, and specific constraints.
+                - Ensure the tone and communication style of the generated prompt are clearly defined.
+                - The prompt should be ready to be pasted directly into a "system" role of an LLM.
                 
                 Return ONLY the final system prompt text without any conversational prefix or suffix.`,
               },
