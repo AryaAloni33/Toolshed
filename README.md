@@ -6,9 +6,13 @@ Toolshed is a premium, focused workspace featuring a collection of **40+ essenti
 ## ✨ Features
 
 ### 🧠 AI Powered Tools (via Groq)
+- **System Prompt Builder**: Transform simple ideas into detailed, production-ready system prompts.
+- **AI SQL Generator**: Generate complex SQL queries from natural language.
+- **Commit Generator**: Turn git diffs into professional commit messages instantly.
 - **AI Summary**: Condense long documents into actionable bullet points.
 - **AI OCR**: Extract text from images and scans with high precision using Llama 3.2 Vision.
 - **Content Extractor**: Pull key entities, themes, and structured data from any text.
+- **Regex Explainer**: AI-powered breakdown of complex regular expressions.
 
 ### 🖼️ Image Editing
 - **Optimization**: Resize and compress images without losing quality.
