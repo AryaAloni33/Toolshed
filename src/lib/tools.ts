@@ -311,6 +311,7 @@ export const tools: Tool[] = [
   },
   {
     slug: "ai-prompt-builder",
+    // AI-powered tool to build detailed system instructions
     name: "System Prompt Builder",
     description: "Transform simple ideas into highly detailed, professional AI system prompts.",
     icon: Sparkles,
