@@ -61,6 +61,8 @@ const toolsMap: Record<string, any> = {
   "ai-sql-gen": lazy(() => import("./ai-sql-generator").then(m => ({ default: m.AiSqlGenerator }))),
   "ai-prompt-builder": lazy(() => import("./ai-system-prompt-builder").then(m => ({ default: m.AiSystemPromptBuilder }))),
   "glassmorphism-gen": lazy(() => import("./glassmorphism-generator").then(m => ({ default: m.GlassmorphismGenerator }))),
+  "ai-data-generator": lazy(() => import("./ai-data-generator").then(m => ({ default: m.AiDataGenerator }))),
+  "code-to-card": lazy(() => import("./code-to-card").then(m => ({ default: m.CodeToCard }))),
 };
 
 export function ToolRenderer({ slug }: { slug: string }) {

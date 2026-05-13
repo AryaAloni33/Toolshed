@@ -24,7 +24,7 @@ import {
   Link2,
   KeyRound,
   StickyNote, Clipboard, ListChecks, QrCode, Columns, Clock,
-  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch, GitCommit, Wind, Code2, Layers, PlayCircle, Wand2
+  Lock, Shield, Key, Database, Table, Percent, Activity, Search, GitBranch, GitCommit, Wind, Code2, Layers, PlayCircle, Wand2, Terminal
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -317,6 +317,24 @@ export const tools: Tool[] = [
     icon: Sparkles,
     category: "ai",
     tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "ai-data-generator",
+    name: "AI Mock Data Architect",
+    description: "Generate complex, realistic JSON datasets for testing and development using AI.",
+    icon: Database,
+    category: "ai",
+    tint: "rust",
+    implemented: true,
+  },
+  {
+    slug: "code-to-card",
+    name: "Code-to-Card Studio",
+    description: "Create beautiful, social-ready code snippet cards with premium backgrounds and browser frames.",
+    icon: Terminal,
+    category: "developer",
+    tint: "moss",
     implemented: true,
   },
 
